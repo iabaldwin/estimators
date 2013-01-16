@@ -7,11 +7,15 @@ IAB.Landmarks =  {
     {
         this.points = [];
 
+        this.meshes = [];
+
         for ( var counter = 0; counter<num_landmarks; counter++ )
         {
             var geometry = new THREE.CircleGeometry( 10, 100 );
-            var material = new THREE.MeshLambertMaterial( { color: 0xff0000} );
+            var material = new THREE.MeshBasicMaterial( { color: 0xff0000} );
             var landmark = new THREE.Mesh( geometry, material );
+
+            this.meshes.push( landmark );
 
             scene.add( landmark );
 

@@ -19,11 +19,11 @@ IAB.Landmarks =  {
 
             scene.add( landmark );
 
-            var random_location = new THREE.Vector3( Math.random()*1000-500,0, Math.random()*1000-500);
+            var landmark_location = new THREE.Vector3( Math.random()*1000-500,0, Math.random()*1000-500);
 
-            this.points.push( random_location );
+            this.points.push( landmark_location );
 
-            landmark.position = random_location;
+            landmark.position = landmark_location;
             landmark.rotation.x += THREE.Math.degToRad( 270 );
         
         }

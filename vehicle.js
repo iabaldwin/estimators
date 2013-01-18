@@ -32,17 +32,19 @@ IAB.Vehicle =  {
             //console.log( obj );
         }
 
+
+        function bind(fn,obj)
+        {
+            return function(b)
+            {
+                return fn(obj,b);
+            }
+        }
+        
+        this.move_targets = [];
         this.move = function(target)
         {
             var tween = new TWEEN.Tween(this.mesh.position).to(target, 20000);
-   
-            function bind(fn,obj)
-            {
-                return function(b)
-                {
-                    return fn(obj,b);
-                }
-            }
 
             var bound  = bind( this.tweenUpdate, this );
 

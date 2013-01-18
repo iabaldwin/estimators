@@ -5,9 +5,9 @@ IAB.Vehicle =  {
     Holonomic: function( scene, landmarks )
     {
         // Build vehicle representation
-        var geometry = new THREE.CircleGeometry( 20, 50 );
-        var material = new THREE.MeshLambertMaterial( { color: 0x00ff80, ambient: 0x00ff80, shading: THREE.FlatShading, map: THREE.ImageUtils.loadTexture( "../media/texture.jpg" ) } );
-        this.mesh    = new THREE.Mesh( geometry, material );
+        var vehicle_geometry = new THREE.CircleGeometry( 20, 50 );
+        var vehicle_material = new THREE.MeshLambertMaterial( { color: 0x00ff80, ambient: 0x00ff80, shading: THREE.FlatShading, map: THREE.ImageUtils.loadTexture( "../media/texture.jpg" ) } );
+        this.mesh            = new THREE.Mesh( vehicle_geometry, vehicle_material );
     
         scene.add( this.mesh );
 

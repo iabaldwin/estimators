@@ -1,5 +1,8 @@
 var IAB = window.IAB || {};
 
+var Red = new THREE.Color( 0xff0000 );
+var Green = new THREE.Color( 0x00ff00 );
+
 IAB.Sensors=  {
 
     Ranging: function( scene, landmarks )
@@ -10,12 +13,12 @@ IAB.Sensors=  {
         // Distance metric 
         function distance(a, b) {
             var dx = a.x-b.x;
-            var dy = a.y-b.y;
-            return dx*dx + dy*dy;
+            var dz = a.z-b.z;
+            return dx*dx + dz*dz;
         }
  
         // Build KD tree
-        this.tree = new kdTree( landmarks.points, distance, ["x", "y" ]);
+        this.tree = new kdTree( landmarks.locations, distance, ["a", "b" ]);
 
         // Line Geometries
         //this.line_geometries = [];
@@ -34,31 +37,29 @@ IAB.Sensors=  {
             //}
         //}
         //this.createLineGeometry();
-
-        var Red = new THREE.Color( 0xff0000 );
-        var Green = new THREE.Color( 0x00ff00 );
-
-        var call_counter = 0;
+        
+        //var call_counter = 0;
         this.update = function( robot_location )
         {
-            var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors, 100 );
+            //var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors );
     
-            if ((call_counter++ % 100) == 0)
-            {
-                this.addNode( robot_location );
-            }
+            //if ((call_counter++ % 100) == 0)
+            //{
+                //this.addNode( robot_location );
+            //}
 
-            for ( var i = 0; i<visible_landmarks.length; i++ )
-            {
-                var index = landmarks.points.indexOf( visible_landmarks[i][0] );
+            //console.log( visible_landmarks );
+            //for ( var i = 0; i<visible_landmarks.length; i++ )
+            //{
+                //var index = landmarks.points.indexOf( visible_landmarks[i][0] );
 
-                landmarks.meshes[index].material.color = Green;
+                //landmarks.meshes[index].material.color = Green;
 
-                //this.line_geometries[i].geometry.vertices[1] = visible_landmarks[i];
-                //this.line_geometries[i].geometry.verticesNeedUpdate = true;
-                //this.line_geometries[i].geometry.elementsNeedUpdate = true;
-                //console.log( this.line_geometries[i] );
-            }
+                ////this.line_geometries[i].geometry.vertices[1] = visible_landmarks[i];
+                ////this.line_geometries[i].geometry.verticesNeedUpdate = true;
+                ////this.line_geometries[i].geometry.elementsNeedUpdate = true;
+                ////console.log( this.line_geometries[i] );
+            //}
         }
 
         this.addNode = function(robot_location){

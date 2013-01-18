@@ -7,12 +7,21 @@ function distance(a, b) {
 }
 var origin = {x:0, y:0, z:0 };
 
+var line_material = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1, linewidth: 2 } );
+var line_geometry = new THREE.Geometry();
+var line_mesh;
+
+var current = 0;
+
+var visible_landmarks;
+
 postInit = function(){
 
+    // Overhead
     camera.position.x = 0;
     camera.position.z = 0;
-
     camera.lookAt( {x: 0, y:0, z: 0});
+    
     // Add random obstacles
     var num_obstacles = 5;
     var points = [];
@@ -31,7 +40,6 @@ postInit = function(){
         mesh.position = new THREE.Vector3(x,y,z);
         mesh.rotation.x += THREE.Math.degToRad( 270 );
 
-        //points.push( [x, z ]);
         points.push( {x: x, z: z });
 
     }
@@ -39,25 +47,27 @@ postInit = function(){
     tree = new kdTree( points, distance, ["x", "z"] );
     
     // Query point
-    var visible_landmarks =  tree.nearest( origin, 1 );
+    visible_landmarks =  tree.nearest( origin, 5 );
+    console.log( visible_landmarks );
 
     // Draw a line to the first landmark
-    var line_material = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1, linewidth: 2 } );
-    var line_geometry = new THREE.Geometry();
     line_geometry.vertices.push( origin );
-    line_geometry.vertices.push( { x: visible_landmarks[0][0].x, y:0, z:visible_landmarks[0][0].z} );
+    line_geometry.vertices.push( { x: visible_landmarks[current][0].x, y:0, z:visible_landmarks[current][0].z} );
 
-
-    var line_mesh = new THREE.Line(line_geometry, line_material);
+    line_mesh = new THREE.Line(line_geometry, line_material);
 
     scene.add( line_mesh );
 
-    console.log( visible_landmarks[0][0] );
+};
+
+increment = function()
+{
 };
 
 postRender = function(){ 
 
 };
+
 
 
 init();

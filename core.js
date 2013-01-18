@@ -55,13 +55,13 @@ function init() {
     container.appendChild( stats.domElement );
 
     // Build environment
-    var landmarks = new IAB.Landmarks.Point( scene, 100 );
+    var landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
    
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);
    
-    // Transition
-    vehicle.move( new THREE.Vector3( 100, 0, 100 ) );
+    //// Transition
+    //vehicle.move( new THREE.Vector3( 100, 0, 100 ) );
 
 }
 
@@ -123,8 +123,12 @@ function render() {
     
     TWEEN.update();
 
-    vehicle.update();
+    //try
+    //{
+        //vehicle.update();
+    //}
+    //catch(err){ console.log(err)}
 
-    time = Date.now();
+    //time = Date.now();
 
 }

@@ -14,22 +14,17 @@ IAB.Vehicle =  {
         this.mesh.position = new THREE.Vector3(0,0,0);
         this.mesh.rotation.x += THREE.Math.degToRad( 270 );
 
-        // Sensor suite
+        // Sensors
         this.sensor = new IAB.Sensors.Ranging(scene,landmarks);
         
-        this.set = function( vector )
-        {
-            this.mesh.position = vector; 
-        }
-
-        this.position = function()
+        this.getPosition = function()
         {
             return this.mesh.position;
         }
 
         this.update = function()
         {
-            this.sensor.update( this.position() );
+            this.sensor.update( this.getPosition() );
         }
 
         this.tweenUpdate = function(obj,b)
@@ -53,6 +48,7 @@ IAB.Vehicle =  {
 
             tween.onUpdate( bound );
 
+            // Run tween
             tween.start();
         }
     } 

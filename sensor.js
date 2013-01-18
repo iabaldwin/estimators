@@ -8,7 +8,7 @@ IAB.Sensors=  {
     Ranging: function( scene, landmarks )
     {
         // Parameters
-        this.num_neighbors = 5;
+        this.num_neighbors = 1;
 
         // Distance metric 
         function distance(a, b) {
@@ -18,48 +18,32 @@ IAB.Sensors=  {
         }
  
         // Build KD tree
-        this.tree = new kdTree( landmarks.locations, distance, ["a", "b" ]);
+        this.tree = new kdTree( landmarks.locations, distance, ["x", "z" ]);
 
-        // Line Geometries
-        //this.line_geometries = [];
-        
-        //this.createLineGeometry = function()
-        //{
-            //for ( var i=0; i<this.num_neighbors; i++ )
-            //{
-                ////var lineMat = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1, linewidth: 2 } );
+        this.createNode = function( node_location )
+        {
+            console.log( node_location );
+            var geometry = new THREE.CircleGeometry( 20, 50 );
+            var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+            var mesh     = new THREE.Mesh( geometry, material );
+    
+            scene.add( mesh );
 
-                ////var geom = new THREE.Geometry();
-                ////geom.vertices.push( this.mesh.position );
-                ////geom.vertices.push( this.mesh.position );
+            mesh.position = new THREE.Vector3( node_location.x, 0, node_location.z );;
+            mesh.rotation.x += THREE.Math.degToRad( 270 );
+       
+        }
 
-                ////this.line_geometries[i] = new THREE.Line(geom, lineMat);
-            //}
-        //}
-        //this.createLineGeometry();
-        
-        //var call_counter = 0;
         this.update = function( robot_location )
         {
-            //var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors );
-    
-            //if ((call_counter++ % 100) == 0)
-            //{
-                //this.addNode( robot_location );
-            //}
+            var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors );
+  
+            for ( var i = 0; i<visible_landmarks.length; i++ )
+            {
+                var index = landmarks.locations.indexOf( visible_landmarks[i][0] );
 
-            //console.log( visible_landmarks );
-            //for ( var i = 0; i<visible_landmarks.length; i++ )
-            //{
-                //var index = landmarks.points.indexOf( visible_landmarks[i][0] );
-
-                //landmarks.meshes[index].material.color = Green;
-
-                ////this.line_geometries[i].geometry.vertices[1] = visible_landmarks[i];
-                ////this.line_geometries[i].geometry.verticesNeedUpdate = true;
-                ////this.line_geometries[i].geometry.elementsNeedUpdate = true;
-                ////console.log( this.line_geometries[i] );
-            //}
+                landmarks.landmarks[index].material.color = Green;
+            }
         }
 
         this.addNode = function(robot_location){

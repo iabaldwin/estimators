@@ -20,7 +20,9 @@ function init() {
 
     // Camera
     camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
-    camera.position = new THREE.Vector3(300,300,300);
+    //camera.position = new THREE.Vector3(300,300,300);
+    camera.position = new THREE.Vector3(0,1300,0);
+    
     camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
     // Controls
@@ -55,13 +57,14 @@ function init() {
     container.appendChild( stats.domElement );
 
     // Build environment
-    var landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
-   
+    var landmarks = new IAB.Landmark.GenerateRandom( scene, 10 );
+    console.log( landmarks.locations );
+
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);
    
     //// Transition
-    //vehicle.move( new THREE.Vector3( 100, 0, 100 ) );
+    vehicle.move( new THREE.Vector3( 100, 0, 100 ) );
 
 }
 
@@ -123,11 +126,7 @@ function render() {
     
     TWEEN.update();
 
-    //try
-    //{
-        //vehicle.update();
-    //}
-    //catch(err){ console.log(err)}
+    vehicle.update();
 
     //time = Date.now();
 

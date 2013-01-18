@@ -9,6 +9,7 @@ var vehicle;
 
 init();
 animate();
+var landmarks;
 
 function init() {
 
@@ -57,8 +58,7 @@ function init() {
     container.appendChild( stats.domElement );
 
     // Build environment
-    var landmarks = new IAB.Landmark.GenerateRandom( scene, 10 );
-    console.log( landmarks.locations );
+    landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
 
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);

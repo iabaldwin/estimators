@@ -15,7 +15,7 @@ IAB.Vehicle =  {
         this.mesh.rotation.x += THREE.Math.degToRad( 270 );
 
         // Sensors
-        this.sensor = new IAB.Sensors.Ranging(scene,landmarks);
+        this.sensor = new IAB.Sensors.Ranging(scene, landmarks);
         
         this.getPosition = function()
         {

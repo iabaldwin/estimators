@@ -14,15 +14,18 @@ IAB.Sensors=  {
         function distance(a, b) {
             var dx = a.x-b.x;
             var dz = a.z-b.z;
+           
+            //console.log( a.position.x );
+            //return 0;
             return dx*dx + dz*dz;
         }
  
         // Build KD tree
-        this.tree = new kdTree( landmarks.locations, distance, ["x", "z" ]);
+        //this.tree = new kdTree( landmarks.locations, distance, ["x", "z" ]);
+        this.tree = new kdTree( landmarks, distance, ["x", "z" ]);
 
         this.createNode = function( node_location )
         {
-            console.log( node_location );
             var geometry = new THREE.CircleGeometry( 20, 50 );
             var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
             var mesh     = new THREE.Mesh( geometry, material );
@@ -37,26 +40,13 @@ IAB.Sensors=  {
         this.update = function( robot_location )
         {
             var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors );
-  
+
+
             for ( var i = 0; i<visible_landmarks.length; i++ )
             {
-                var index = landmarks.locations.indexOf( visible_landmarks[i][0] );
-
-                landmarks.landmarks[index].material.color = Green;
+                visible_landmarks[i][0].material.color = Green;
             }
         }
 
-        this.addNode = function(robot_location){
-            // Build vehicle representation
-            var geometry = new THREE.CircleGeometry( 5, 50 );
-            var material = new THREE.MeshBasicMaterial( { color: 0x0000ff, ambient: 0x00ff80, shading: THREE.FlatShading} );
-            var mesh    = new THREE.Mesh( geometry, material );
-            
-            scene.add( mesh );
-
-            mesh.position = new THREE.Vector3( robot_location.x, robot_location.y, robot_location.z );
-            mesh.rotation.x += THREE.Math.degToRad( 270 );
-
-        }
     }
 }

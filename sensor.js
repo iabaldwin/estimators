@@ -5,48 +5,60 @@ var Green = new THREE.Color( 0x00ff00 );
 
 IAB.Sensors=  {
 
+    Odometry: function()
+    {
+        // Parameters 
+        this.visible = false;
+
+        this.previous_location = new THREE.Vector3( 0, 0, 0 );
+      
+        this.last_update_time = Date.now();
+
+        this.update = function( robot_location )
+        {
+            var update_time = Date.now() - this.last_update_time;
+         
+            if ( update_time < 25 )
+            {
+                return;
+            }
+
+            this.last_update_time = Date.now();
+
+            var odometry_update = new THREE.Vector3();
+            odometry_update.sub( robot_location, this.previous_location );
+
+            this.previous_location = robot_location;
+        }
+
+        return this;
+    },
+
     Ranging: function( scene, landmarks )
     {
         // Parameters
-        this.num_neighbors = 1;
+        this.range = 100;
 
-        // Distance metric 
+        // Squared distance metric 
         function distance(a, b) {
             var dx = a.x-b.x;
             var dz = a.z-b.z;
-           
-            //console.log( a.position.x );
-            //return 0;
             return dx*dx + dz*dz;
         }
  
         // Build KD tree
-        //this.tree = new kdTree( landmarks.locations, distance, ["x", "z" ]);
         this.tree = new kdTree( landmarks, distance, ["x", "z" ]);
 
-        this.createNode = function( node_location )
-        {
-            var geometry = new THREE.CircleGeometry( 20, 50 );
-            var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-            var mesh     = new THREE.Mesh( geometry, material );
-    
-            scene.add( mesh );
-
-            mesh.position = new THREE.Vector3( node_location.x, 0, node_location.z );;
-            mesh.rotation.x += THREE.Math.degToRad( 270 );
-       
-        }
-
+        // Loop
         this.update = function( robot_location )
         {
-            var visible_landmarks =  this.tree.nearest( robot_location, this.num_neighbors );
-
+            // Sensor horizon
+            var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
 
             for ( var i = 0; i<visible_landmarks.length; i++ )
             {
                 visible_landmarks[i][0].material.color = Green;
             }
         }
-
     }
 }

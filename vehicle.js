@@ -15,7 +15,9 @@ IAB.Vehicle =  {
         this.mesh.rotation.x += THREE.Math.degToRad( 270 );
 
         // Sensors
-        this.sensor = new IAB.Sensors.Ranging(scene, landmarks);
+        this.sensors = [];
+        this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks) );
+        this.sensors.push( new IAB.Sensors.Odometry() );
         
         this.getPosition = function()
         {
@@ -24,14 +26,14 @@ IAB.Vehicle =  {
 
         this.update = function()
         {
-            this.sensor.update( this.getPosition() );
+            var position = this.getPosition(); 
+            this.sensors.forEach( function(sensor){ sensor.update( position ); } );
         }
 
         this.tweenUpdate = function(obj,b)
         {
             //console.log( obj );
         }
-
 
         function bind(fn,obj)
         {
@@ -41,17 +43,28 @@ IAB.Vehicle =  {
             }
         }
         
-        this.move_targets = [];
-        this.move = function(target)
+        this.waypoints  = [];
+        this.addWaypoint = function(target)
         {
-            var tween = new TWEEN.Tween(this.mesh.position).to(target, 20000);
+            var start;
+            if ( this.waypoints.length == 0 )
+            {  
+                start = this.mesh.position;
+            }
+            else
+            {
+                start = this.waypoints[this.waypoints.length-1].target;
+            }
+                
+            var tween = new TWEEN.Tween(start).to(target, 20000);
+            
+            tween.onUpdate( bind( this.tweenUpdate, this ) );
+            
+            this.waypoints.push( { tween: tween, target:target } ); 
 
-            var bound  = bind( this.tweenUpdate, this );
-
-            tween.onUpdate( bound );
-
-            // Run tween
             tween.start();
         }
+
+        return this;
     } 
 };

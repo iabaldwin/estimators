@@ -27,17 +27,6 @@ IAB.IO = {
 }
 };
 
-var Logger = {
-    
-    LOG: function( data )
-    {
-        this.name = 'Logger1';
-        //console.log( data );
-        console.log( this.name );
-    }
-
-}
-
 function Data()
 {
     this.update = function(data)
@@ -45,11 +34,19 @@ function Data()
         this.data = data;
     }
 
+    this.examine = function()
+    {
+        var json = JSON.parse(this.data);
+
+        console.log( json[0] );
+
+    }
 }
 
 var d = new Data();
 
 IAB.IO.JSON( 'log.json', d.update.bind(d) );
 
-setTimeout( function(){console.log(d.data);}, 1000 );
+//setTimeout( function(){console.log(d.data);}, 1000 );
+setTimeout( d.examine.bind(d), 1000 );
 

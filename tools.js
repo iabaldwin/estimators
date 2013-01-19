@@ -11,14 +11,17 @@ IAB.IO = {
     TXT: function( fname )
     {
 
+        console.log( fname );
         var reader = new FileReader();
 
-        reader.readAsText( fname );
+        reader.readAsDataURL( fname );
+        console.log( reader );
    
         console.log( reader.result );
     }
     
 };
 
-IAB.IO.TXT( '/Users/ian/code/web/estimators/test.txt' );
+//IAB.IO.TXT( 'http://localhost:8000/test.txt' );
+IAB.IO.TXT( 'http://127.0.0.1:8000/test.txt' );
 

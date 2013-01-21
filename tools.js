@@ -10,6 +10,15 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 //window.requestFileSystem( window.TEMPORARY, 1024*1024, init, errorHandler );
 
+IAB.Dataserver = {
+
+    ROOT: 'http://localhost:8000',
+
+    STANFORD: 'http://localhost:8000/stanford-gates1/stanford-gates1.log.json'
+
+};
+
+
 IAB.IO = {
 
     JSON: function( json_name, fn )
@@ -36,16 +45,17 @@ function Data()
 
     this.examine = function()
     {
-        var json = JSON.parse(this.data);
+        //var json = JSON.parse(this.data);
 
         console.log( json[0] );
-
+        console.log( this.data );
     }
 }
 
 var d = new Data();
 
-IAB.IO.JSON( 'log.json', d.update.bind(d) );
+//IAB.IO.JSON( 'log.json', d.update.bind(d) );
+IAB.IO.JSON( IAB.Dataserver.STANFORD, d.update.bind(d) );
 
 //setTimeout( function(){console.log(d.data);}, 1000 );
 setTimeout( d.examine.bind(d), 1000 );

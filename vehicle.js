@@ -16,7 +16,8 @@ IAB.Vehicle =  {
 
         // Sensors
         this.sensors = [];
-        this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
+        //this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
+        this.sensors.push( new IAB.Sensors.FixedRanging(scene, landmarks ) );
         this.sensors.push( new IAB.Sensors.Odometry() );
         
         var geometry = new THREE.CircleGeometry( 20, 50 );
@@ -24,6 +25,7 @@ IAB.Vehicle =  {
         var odometry_mesh = new THREE.Mesh( geometry, material );
 
         scene.add( odometry_mesh );
+        
         odometry_mesh.position = this.sensors[1].estimate ;
         odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
@@ -37,7 +39,7 @@ IAB.Vehicle =  {
         {
             var position = this.getPosition(); 
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
-       
+        
         }
 
         this.tweenUpdate = function(obj,b)

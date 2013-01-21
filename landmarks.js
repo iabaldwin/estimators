@@ -16,6 +16,9 @@ IAB.Landmark =  {
         this.y = this.mesh.position.y;
         this.z = this.mesh.position.z;
 
+        this.position = this.mesh.position;
+
+        this.id = this.mesh.id;
     },
     
     GenerateRandom: function(scene, num_landmarks)

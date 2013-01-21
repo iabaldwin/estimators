@@ -16,7 +16,7 @@ IAB.Vehicle =  {
 
         // Sensors
         this.sensors = [];
-        this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks) );
+        this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
         this.sensors.push( new IAB.Sensors.Odometry() );
         
         this.getPosition = function()

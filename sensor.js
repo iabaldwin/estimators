@@ -1,18 +1,13 @@
 var IAB = window.IAB || {};
 
-var Red = new THREE.Color( 0xff0000 );
+var Red   = new THREE.Color( 0xff0000 );
 var Green = new THREE.Color( 0x00ff00 );
 
 IAB.Sensors=  {
 
     CanUpdate: function( last_update_time, frequency )
     {
-        var update_time = Date.now() - last_update_time;
-        
-        var return_val = update_time < 1/frequency*1000 ? false: true;
-
-        return return_val;
-
+        return ((Date.now() - last_update_time)< 1/frequency*1000) ? false: true;
     },
 
     Odometry: function()
@@ -40,8 +35,6 @@ IAB.Sensors=  {
             {
                 return;
             }
-
-
         }
 
         return this;
@@ -122,10 +115,6 @@ IAB.Sensors=  {
             // Sensor horizon
             var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
 
-            for ( var i = 0; i<visible_landmarks.length; i++ )
-            {
-                visible_landmarks[i][0].material.color = Green;
-            }
         }
     }
 }

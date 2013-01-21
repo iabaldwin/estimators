@@ -19,6 +19,15 @@ IAB.Vehicle =  {
         this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
         this.sensors.push( new IAB.Sensors.Odometry() );
         
+        var geometry = new THREE.CircleGeometry( 20, 50 );
+        var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+        var odometry_mesh = new THREE.Mesh( geometry, material );
+
+        scene.add( odometry_mesh );
+        odometry_mesh.position = this.sensors[1].estimate ;
+        odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
+
+
         this.getPosition = function()
         {
             return this.mesh.position;
@@ -28,6 +37,7 @@ IAB.Vehicle =  {
         {
             var position = this.getPosition(); 
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+       
         }
 
         this.tweenUpdate = function(obj,b)

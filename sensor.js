@@ -10,25 +10,41 @@ IAB.Sensors=  {
         return ((Date.now() - last_update_time)< 1/frequency*1000) ? false: true;
     },
 
-    Odometry: function()
+    Odometry: function( update_frequency )
     {
         // Parameters 
-        this.visible = false;
-
+        this.update_frequency = update_frequency || 2; // Hz
+       
+        // Initialisers
         this.previous_location = new THREE.Vector3( 0, 0, 0 );
 
-        this.update_frequency = 2; // Hz
+        // Position estimate, via odometry
+        this.estimate = new THREE.Vector3(0,0,0);
+        
+        var delta = new THREE.Vector3(); 
+        
         this.last_update_time = Date.now();
 
+        // Core loop
         this.update = function( robot_location )
         {
             if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
             {
-                // Do the update
-                var odometry_update = new THREE.Vector3();
-                odometry_update.sub( robot_location, this.previous_location );
-                this.previous_location = robot_location;
+                // Get ground-truth motion
+                //delta.sub( this.previous_location, robot_location );
+                delta.sub( robot_location,this.previous_location );
 
+                // Corrupt with noise
+                delta.x += Math.random()/10;
+                delta.z += Math.random()/10;
+
+                // Update the estimate
+                this.estimate.addSelf( delta );
+
+                // Update positions
+                this.previous_location.copy( robot_location );
+
+                // Update time
                 this.last_update_time = Date.now();
             }
             else
@@ -36,14 +52,14 @@ IAB.Sensors=  {
                 return;
             }
         }
-
-        return this;
+    
     },
 
-    Ranging: function( scene, landmarks, range )
+    Ranging: function( scene, landmarks, range, update_frequency )
     {
         // Parameters
         this.range = range || 100;
+        this.update_frequency = update_frequency || 2; // Hz
 
         // Squared distance metric 
         function distance(a, b) {
@@ -52,15 +68,15 @@ IAB.Sensors=  {
             return dx*dx + dz*dz;
         }
  
-        // Build KD tree
+        // Build KD tree, for faster lookups
         this.tree = new kdTree( landmarks, distance, ["x", "z" ]);
 
-        // Loop
+        // Useful datafields
         var tmp = new THREE.Vector3();
         
-        this.update_frequency = 2; // Hz
         this.last_update_time = Date.now();
         
+        // Core Loop
         this.update = function( robot_location )
         {
 
@@ -68,7 +84,12 @@ IAB.Sensors=  {
             {
                 this.last_update_time = Date.now();
 
-                // Sensor horizon
+                /* Compute the visible landmarks
+                 *     Note here that we are looking for *all* the landmarks, 
+                 *     and selecting them by the 'sensor horizon', or the 
+                 *     squared distance.
+                 */
+
                 var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
 
                 var readings = [];
@@ -77,15 +98,12 @@ IAB.Sensors=  {
                 {
                     landmark = visible_landmarks[i][0];
                     
-                    //visible_landmarks[i][0].material.color = Green;
                     landmark.material.color = Green; 
 
                     tmp.copy(robot_location);
                     var range = tmp.distanceTo(landmark.position);
                     
                     readings.push( { id:landmark.id, range:range } );
-           
-                    console.log( readings );
                 }
 
             }
@@ -114,7 +132,6 @@ IAB.Sensors=  {
         {
             // Sensor horizon
             var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
-
         }
     }
 }

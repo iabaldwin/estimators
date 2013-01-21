@@ -29,6 +29,7 @@ IAB.Vehicle =  {
         odometry_mesh.position = this.sensors[1].estimate ;
         odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
+        var estimator = new IAB.Estimators.EKF( .1, .2 );
 
         this.getPosition = function()
         {

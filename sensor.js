@@ -10,6 +10,44 @@ IAB.Sensors=  {
         return ((Date.now() - last_update_time)< 1/frequency*1000) ? false: true;
     },
 
+    Velocity: function( update_frequency )
+    {
+        this.last_update_time = Date.now();
+
+        // Parameters 
+        this.update_frequency = update_frequency || 2; // Hz
+       
+        // Initialisers
+        this.previous_location = new THREE.Vector3( 0, 0, 0 );
+
+        // Pose-pose change
+        var delta = new THREE.Vector3(); 
+
+        // Core loop
+        this.update = function( robot_location )
+        {
+            if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
+            {
+ 
+                // Get ground-truth motion
+                delta.sub( robot_location,this.previous_location );
+
+                var vel = delta.length()/( (Date.now() - this.last_update_time) /1000);
+
+                console.log( 'Velocity: ' + vel );
+
+                // Update positions
+                this.previous_location.copy( robot_location );
+
+                // Update time
+                this.last_update_time = Date.now();
+
+
+            }
+
+        }
+    },
+
     Odometry: function( update_frequency )
     {
         this.last_update_time = Date.now();
@@ -25,7 +63,6 @@ IAB.Sensors=  {
 
         // Pose-pose change
         var delta = new THREE.Vector3(); 
-        
 
         // Core loop
         this.update = function( robot_location )

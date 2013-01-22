@@ -1,5 +1,12 @@
 var IAB = window.IAB || {};
 
+function sec(aValue)
+{
+    return 1/Math.cos(aValue);
+}
+// Register the new function
+Math.constructor.prototype.sec = sec;
+
 IAB.Estimators = {
 
     State: function( x,y,theta )
@@ -40,16 +47,18 @@ IAB.Estimators = {
 
         var dt = .1;
 
+        this.model = model;
+
         this.update = function()
         {
             //Compute Jacobians
-            JacFx = [[1,0,-dt*control_action.u*Math.sin( this.state.theta)],
-                    [0,1,dt*control_action.v*Math.cos(this.state.theta)],
-                    [0,0,1]];
+            //JacFx = [[1,0,-dt*control_action.u*Math.sin( this.state.theta)],
+                    //[0,1,dt*control_action.v*Math.cos(this.state.theta)],
+                    //[0,0,1]];
       
-            JacFu = [[dt*Math.cos( this.state.theta) 0],
-                    [dt*Math.sin( this.state.theta) 0],
-                    [dt*Math.tan(this.control_action.u/L
+            //JacFu = [[dt*Math.cos( this.state.theta), 0],
+                    //[dt*Math.sin( this.state.theta), 0],
+                    //[dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*Math.sec(Math.pow(this.control_action.v,2))]];
         }
     }
 

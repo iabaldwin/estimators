@@ -29,15 +29,21 @@ IAB.Vehicle =  {
         //odometry_mesh.position = this.sensors[1].estimate ;
         //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
-        var start_state = new IAB.Estimators.State( 0, 0, 0 );
-
-        var estimator = new IAB.Estimators.EKF( start_state, .1 );
-
-        var controller = new IAB.Controllers.Wiggle(1,1);
-
-        var model = new IAB.Models.Ackermann();
-
+        // Initial state
         var state = new IAB.Estimators.State();
+
+        var controller = new IAB.Controllers.Wiggle(1,10);
+
+        var current_control = new IAB.Controllers.ControlInput();
+
+        // Estimation Model
+        var model = new IAB.Models.Ackermann(10);
+
+        var P = new IAB.Estimators.Covariance( .1, 3 );
+
+        var Q = [[0,.1],[.1,0]];
+
+        var estimator = new IAB.Estimators.EKF( state, P.M, Q, current_control, model );
 
         this.getPosition = function()
         {
@@ -49,10 +55,17 @@ IAB.Vehicle =  {
             var position = this.getPosition(); 
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
 
-            state = model.predict( state, controller.update(), .1, 10 );
+            // Update the control action
+            current_control.copy(  controller.update() );
+            
+            // Predict the state
+            state = model.predict( state, current_control, .1, 10 );
+            
             this.mesh.position.x = state.x;
             this.mesh.position.z = state.y;
 
+            // Estimate
+            estimator.update();
         }
 
         this.tweenUpdate = function(obj,b)

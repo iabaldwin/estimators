@@ -20,19 +20,24 @@ IAB.Vehicle =  {
         this.sensors.push( new IAB.Sensors.FixedRanging(scene, landmarks ) );
         this.sensors.push( new IAB.Sensors.Odometry() );
         this.sensors.push( new IAB.Sensors.Velocity( 50 ) );
-        
-        var geometry = new THREE.CircleGeometry( 20, 50 );
-        var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-        var odometry_mesh = new THREE.Mesh( geometry, material );
-
-        scene.add( odometry_mesh );
-        
-        odometry_mesh.position = this.sensors[1].estimate ;
-        odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
+       
+        //TMP
+        //var geometry = new THREE.CircleGeometry( 20, 50 );
+        //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+        //var odometry_mesh = new THREE.Mesh( geometry, material );
+        //scene.add( odometry_mesh );
+        //odometry_mesh.position = this.sensors[1].estimate ;
+        //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
         var start_state = new IAB.Estimators.State( 0, 0, 0 );
 
         var estimator = new IAB.Estimators.EKF( start_state, .1 );
+
+        var controller = new IAB.Controllers.Wiggle(1,1);
+
+        var model = new IAB.Models.Ackermann();
+
+        var state = new IAB.Estimators.State();
 
         this.getPosition = function()
         {
@@ -43,6 +48,11 @@ IAB.Vehicle =  {
         {
             var position = this.getPosition(); 
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+
+            state = model.predict( state, controller.update(), .1, 10 );
+            this.mesh.position.x = state.x;
+            this.mesh.position.z = state.y;
+
         }
 
         this.tweenUpdate = function(obj,b)

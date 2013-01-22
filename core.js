@@ -5,7 +5,7 @@ var mouse2D, mouse3D, raycaster,
     theta = 45 * 0.5;
 
 var controls,time=Date.now();
-var vehicle;
+var vehicle, controller;
 
 init();
 animate();
@@ -63,10 +63,12 @@ function init() {
 
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);
-   
+
     //// Transition
-    vehicle.addWaypoint( new THREE.Vector3( 100, 0, 100 ) );
+    //vehicle.addWaypoint( new THREE.Vector3( 100, 0, 100 ) );
     //vehicle.addWaypoint( new THREE.Vector3( 0, 0, 0 ) );
+    // Or
+    //var controller = new IAB.Controllers.Wiggle(1,1);
 }
 
 function onWindowResize() {

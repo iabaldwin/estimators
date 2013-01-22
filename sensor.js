@@ -10,9 +10,14 @@ IAB.Sensors=  {
         return ((Date.now() - last_update_time)< 1/frequency*1000) ? false: true;
     },
 
+    Heading: function( update_frequency )
+    {
+
+    },
+
     Velocity: function( update_frequency )
     {
-        this.last_update_time = Date.now();
+        //this.last_update_time = Date.now();
 
         // Parameters 
         this.update_frequency = update_frequency || 2; // Hz
@@ -28,13 +33,10 @@ IAB.Sensors=  {
         {
             if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
             {
- 
                 // Get ground-truth motion
                 delta.sub( robot_location,this.previous_location );
 
                 var vel = delta.length()/( (Date.now() - this.last_update_time) /1000);
-
-                console.log( 'Velocity: ' + vel );
 
                 // Update positions
                 this.previous_location.copy( robot_location );
@@ -42,7 +44,8 @@ IAB.Sensors=  {
                 // Update time
                 this.last_update_time = Date.now();
 
-
+                return vel;
+            
             }
 
         }
@@ -212,4 +215,11 @@ IAB.Sensors=  {
         }
     }
 }
+
+//IAB.Sensors.Heading.prototype = new IAB.Patterns.Observer();
+//IAB.Sensors.Heading.prototype.constructor = IAB.Sensors.Sensor;
+
+//IAB.Sensors.Velocity.prototype = new IAB.Patterns.Observer();
+//IAB.Sensors.Velocity.prototype.constructor = IAB.Sensors.Sensor;
+
 

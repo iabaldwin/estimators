@@ -9,6 +9,13 @@ IAB.Estimators = {
         this.theta = theta || 0;
     },
 
+    Control: function( u,v )
+    {
+        this.u = u || 0;
+        this.v = v || 0;
+    },
+
+
     EKF: function( start_state, measurement_covariance )
     {
         if ( !(start_state instanceof IAB.Estimators.State ))
@@ -25,7 +32,10 @@ IAB.Estimators = {
         Q = [[Math.pow(measurement_covariance,2),0],
             [0, Math.pow( measurement_covariance,2)]];
 
-    }
+        this.update = function()
+        {
 
+        }
+    }
 
 };

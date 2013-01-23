@@ -1,4 +1,4 @@
 plotter = new IAB.Tools.Plotting();
 
-plotter.drawCovarianceEllipse( null, [[4,1],[1,4]]);
+plotter.drawCovarianceEllipse( null, [[4,1],[1,4]] );
 

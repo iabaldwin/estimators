@@ -7,8 +7,6 @@ IAB.Tools = {
         this.math = new IAB.Tools.Math();
         this.drawCovarianceEllipse = function( state, P, sigma_bound )
         {
-                        
-
             // Initialise circle
             var x_space = numeric.linspace( 0, 2*Math.PI, 100 );
             var y_space = numeric.linspace( 0, 2*Math.PI, 100 );
@@ -17,19 +15,19 @@ IAB.Tools = {
             y_space = y_space.map( function(x){ return Math.sin(x)} );
 
             var zip =  _.zip( x_space, y_space );
-
-                     
+            
             // Compute eigenvalue decomposition
             var VD = numeric.eig(P) ;
 
-            //console.log( numeric.prettyPrint( P ) );
-            //console.log( numeric.prettyPrint( VD.E.x ) );
-            //console.log( numeric.prettyPrint( numeric.diag( VD.lambda.x.reverse() ) ) );
+            // Compute transformation
+            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
 
-            var t = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
+            // Transform points
+            var transforms = _.map( zip, function(x){ return  numeric.dot( transformation,x );} );
 
-            var transforms = _.map( zip, function(x){ return  numeric.dot( t,x );} );
+            console.log( transforms );
 
+            // Draw
             var f = Flotr.draw(
                     $('container'), 
                     [ transforms ], 

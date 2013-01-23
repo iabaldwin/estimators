@@ -1,11 +1,14 @@
 var IAB = window.IAB || {};
 
-function sec(aValue)
+IAB.Math = 
 {
-    return 1/Math.cos(aValue);
-}
-// Register the new function
-Math.constructor.prototype.sec = sec;
+
+    sec: function( val )
+    {
+        return 1/Math.cos(val);
+    }
+
+};
 
 IAB.Estimators = {
 
@@ -52,13 +55,20 @@ IAB.Estimators = {
         this.update = function()
         {
             //Compute Jacobians
-            //JacFx = [[1,0,-dt*control_action.u*Math.sin( this.state.theta)],
-                    //[0,1,dt*control_action.v*Math.cos(this.state.theta)],
-                    //[0,0,1]];
-      
-            //JacFu = [[dt*Math.cos( this.state.theta), 0],
-                    //[dt*Math.sin( this.state.theta), 0],
-                    //[dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*Math.sec(Math.pow(this.control_action.v,2))]];
+            var JacFx = [[1,0,-dt*control_action.u*Math.sin( this.state.theta)],
+                    [0,1,dt*control_action.v*Math.cos(this.state.theta)],
+                    [0,0,1]];
+     
+
+            var JacFu =  [[dt*Math.cos( this.state.theta), 0],
+                    [dt*Math.sin( this.state.theta), 0],
+                    [dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*IAB.Math.sec(Math.pow(this.control_action.v,2))]];
+            
+            //this.P = numeric.add( numeric.mul( JacFx, this.P, numeric.transpose(JacFx) ), numeric.mul( numeric.transpose(JacFu), this.Q, JacFu ) );
+  
+            //console.log( numeric.prettyPrint( numeric.mul( numeric.transpose(JacFu), this.Q, JacFu ) ) );
+            console.log( numeric.prettyPrint( numeric.mul( numeric.transpose(JacFu), this.Q ) ) );
+     
         }
     }
 

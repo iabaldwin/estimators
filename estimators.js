@@ -52,6 +52,8 @@ IAB.Estimators = {
 
         this.model = model;
 
+        this.plotter = new IAB.Tools.Plotting();
+
         this.update = function()
         {
             //Compute Jacobians
@@ -64,8 +66,10 @@ IAB.Estimators = {
                     [dt*Math.sin( this.state.theta), 0],
                     [dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*IAB.Math.sec(Math.pow(this.control_action.v,2))]];
             
+            
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
-     
+    
+            this.plotter.drawCovarianceEllipse( null, this.P, 1 );
         }
     }
 

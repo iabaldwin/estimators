@@ -1,3 +1,5 @@
+var spline_geometry;
+
 postInit = function(){
 
     var numPoints = 100;
@@ -15,18 +17,30 @@ var material = new THREE.LineBasicMaterial({
     color: 0xff00f0,
 });
 
-var geometry = new THREE.Geometry();
+spline_geometry = new THREE.Geometry();
 var splinePoints = spline.getPoints(numPoints);
 
 for(var i = 0; i < splinePoints.length; i++){
-    geometry.vertices.push(splinePoints[i]);  
+    spline_geometry.vertices.push(splinePoints[i]);  
 }
 
-var line = new THREE.Line(geometry, material);
+var line = new THREE.Line(spline_geometry, material);
 scene.add(line);
 }
 
+var show = true;
 postRender = function(){ 
+    
+
+    for( var i=0; i<spline_geometry.vertices.length; i++ )
+    {
+        //if (show)
+//{
+    //console.log( spline_geometry ); show = false;
+//}
+        spline_geometry.vertices[i].y -= 1;
+    }
+        spline_geometry.verticesNeedUpdate= true; 
 
 };
 

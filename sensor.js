@@ -3,13 +3,18 @@ var IAB = window.IAB || {};
 var Red   = new THREE.Color( 0xff0000 );
 var Green = new THREE.Color( 0x00ff00 );
 
-IAB.Sensors=  {
+IAB.Components = {
 
-    CanUpdate: function( last_update_time, frequency )
+    canUpdate: function( last_update_time, frequency )
     {
         return ((Date.now() - last_update_time)< 1/frequency*1000) ? false: true;
-    },
+    }
 
+};
+
+IAB.Sensors=  {
+
+ 
     Heading: function( update_frequency )
     {
 
@@ -31,7 +36,7 @@ IAB.Sensors=  {
         // Core loop
         this.update = function( robot_location )
         {
-            if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
+            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 // Get ground-truth motion
                 delta.sub( robot_location,this.previous_location );
@@ -70,7 +75,7 @@ IAB.Sensors=  {
         // Core loop
         this.update = function( robot_location )
         {
-            if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
+            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 // Get ground-truth motion
                 delta.sub( robot_location,this.previous_location );
@@ -112,7 +117,7 @@ IAB.Sensors=  {
 
         this.update = function(robot_location)
         {
-            if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
+            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 var readings = [];
         
@@ -157,7 +162,7 @@ IAB.Sensors=  {
         // Core Loop
         this.update = function( robot_location )
         {
-            if (IAB.Sensors.CanUpdate( this.last_update_time, this.update_frequency ))
+            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 this.last_update_time = Date.now();
 

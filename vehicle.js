@@ -32,18 +32,20 @@ IAB.Vehicle =  {
         // Initial state
         var state = new IAB.Estimators.State();
 
-        var controller = new IAB.Controllers.Wiggle(1,10);
+        // Controller - how do we move?
+        var controller = new IAB.Controllers.Wiggle(.2,10);
 
+        // What is the control action *now*?
         var current_control = new IAB.Controllers.ControlInput();
 
         // Estimation Model
-        var model = new IAB.Models.Ackermann(10);
+        var model = new IAB.Models.Ackermann(10); //Wheelbase
 
-        var P = new IAB.Estimators.Covariance( .1, 3 );
+        var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
 
         var Q = [[0,.1],[.1,0]];
 
-        var estimator = new IAB.Estimators.EKF( state, P.M, Q, current_control, model );
+        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model );
 
         this.getPosition = function()
         {

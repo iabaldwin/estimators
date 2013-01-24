@@ -25,7 +25,7 @@ IAB.Tools = {
             // Transform points
             var transforms = _.map( zip, function(x){ return  numeric.dot( transformation,x );} );
 
-            console.log( transforms );
+            //console.log( transforms );
 
             // Draw
             var f = Flotr.draw(

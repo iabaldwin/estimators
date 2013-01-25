@@ -42,10 +42,11 @@ IAB.Vehicle =  {
         var model = new IAB.Models.Ackermann(10); //Wheelbase
 
         var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
-
         var Q = [[0,.1],[.1,0]];
 
-        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model );
+        var args = { scene:scene };
+
+        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, args );
 
         this.getPosition = function()
         {
@@ -67,12 +68,11 @@ IAB.Vehicle =  {
             this.mesh.position.z = state.y;
 
             // Estimate
-            estimator.update();
+            //estimator.update();
         }
 
         this.tweenUpdate = function(obj,b)
         {
-            //console.log( obj );
         }
 
         function bind(fn,obj)

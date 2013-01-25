@@ -1,15 +1,5 @@
 var IAB = window.IAB || {};
 
-IAB.Math = 
-{
-
-    sec: function( val )
-    {
-        return 1/Math.cos(val);
-    }
-
-};
-
 IAB.Estimators = {
 
     State: function( x,y,theta )
@@ -27,7 +17,7 @@ IAB.Estimators = {
         }
     },
 
-    EKF: function( start_state, P, Q, control_action, model )
+    EKF: function( start_state, P, Q, control_action, model, args )
     {
         if ( !(start_state instanceof IAB.Estimators.State ))
         {
@@ -40,21 +30,20 @@ IAB.Estimators = {
         this.control_action = control_action;
         this.model          = model;
         
-
         // Copy arrays and start state
         this.state = new IAB.Estimators.State();
         this.state.copy( start_state );
         this.P = P.slice(0);
         this.Q = Q.slice(0);
 
-        this.plotter = new IAB.Tools.Plotting();
+        this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, 1, args);
+
+        this.math = new IAB.Tools.Math();
 
         this.update = function()
         {
-        
             if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
-  
                 dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency)
 
                 //Compute Jacobians
@@ -65,18 +54,16 @@ IAB.Estimators = {
 
                 var JacFu =  [[dt*Math.cos( this.state.theta), 0],
                         [dt*Math.sin( this.state.theta), 0],
-                        [dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*IAB.Math.sec(Math.pow(this.control_action.v,2))]];
+                        [dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*this.math.sec(Math.pow(this.control_action.v,2))]];
                 
                 
                 this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
     
-                this.plotter.drawCovarianceEllipse( null, this.P, 1 );
+                this.uncertainty_ellipse.update( null, this.P, 1 );
                     
                 this.last_update_time = Date.now();
 
             }
-        
         }
     }
-
 };

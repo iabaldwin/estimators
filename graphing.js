@@ -2,15 +2,9 @@ var IAB = window.IAB || {};
 
 IAB.Graphing = 
 {
-    Ellipse: function( r, g )
+    Ellipse: function( state, P, sigma_bound, args )
     {
-
-        var radius = r || 100;
-        var granularity = g || 10;
-
-        var P = [[4,1],[1,4]];
-
-        var ellipse_points = new IAB.Tools.Geometry().covarianceEllipse( P, 1);
+        var ellipse_points = new IAB.Tools.Geometry().covarianceEllipse( P, sigma_bound );
 
         var ellipse = [];
 
@@ -44,12 +38,11 @@ IAB.Graphing =
             //this.geometry.geometry.verticesNeedUpdate= true; 
         }
 
-        this.update = function( P, sigma_bound )
+        this.update = function( state, P, sigma_bound )
         {
-
             var P = [[14,.1],[.1,14]];
             var sigma_bound = 1;
-             
+           
             var ellipse_points = new IAB.Tools.Geometry().covarianceEllipse( P, sigma_bound );
 
             for ( var i=0; i<this.geometry.geometry.vertices.length; i++ )
@@ -60,6 +53,8 @@ IAB.Graphing =
             this.geometry.geometry.verticesNeedUpdate= true; 
         }
 
+    
+        scene.add(this.geometry);
 
         return this;
 

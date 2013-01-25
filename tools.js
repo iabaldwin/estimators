@@ -57,6 +57,9 @@ IAB.Tools = {
             return [[(M[0][0]+s)/t, M[0][1]/t],[M[1][0]/t,(M[1][1]+s)/t]];
         }
 
+        this.sec = function(val)
+        {
+            return 1/Math.cos(val);
+        }
     }
-
 };

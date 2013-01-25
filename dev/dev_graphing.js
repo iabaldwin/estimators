@@ -12,7 +12,6 @@ postRender = function(){
 
         ellipse.move( new THREE.Vector3(0,-1,0) );
 
-
 };
 
 init();

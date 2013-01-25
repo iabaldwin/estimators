@@ -54,7 +54,7 @@ IAB.Graphing =
         }
 
     
-        scene.add(this.geometry);
+        args.scene.add(this.geometry);
 
         return this;
 

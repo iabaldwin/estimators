@@ -44,9 +44,7 @@ IAB.Vehicle =  {
         var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
         var Q = [[0,.1],[.1,0]];
 
-        var args = { scene:scene };
-
-        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, args );
+        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene});
 
         this.getPosition = function()
         {

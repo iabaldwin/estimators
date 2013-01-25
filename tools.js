@@ -16,7 +16,7 @@ IAB.Tools = {
             y_space = y_space.map( function(x){ return 100*Math.sin(x)} );
 
             var zip =  _.zip( x_space, y_space );
-            
+
             // Compute eigenvalues
             var VD = numeric.eig(P) ;
 

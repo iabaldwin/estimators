@@ -2,16 +2,14 @@ var ellipse;
 
 postInit = function(){
 
-    ellipse = new IAB.Graphing.Ellipse(100,10);
+    var cov = [[4,.1],[.1,4]];
 
-    scene.add(ellipse.geometry);
-
+    ellipse = new IAB.Graphing.Ellipse(null, cov, 1, {scene:scene} );
 }
 
 postRender = function(){ 
 
         ellipse.move( new THREE.Vector3(0,-1,0) );
-
 };
 
 init();

@@ -16,8 +16,8 @@ IAB.Landmark =  {
         this.y = this.mesh.position.y;
         this.z = this.mesh.position.z;
 
+        // Reference
         this.position = this.mesh.position;
-
         this.id = this.mesh.id;
     },
     

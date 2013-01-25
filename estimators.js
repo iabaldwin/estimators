@@ -24,11 +24,11 @@ IAB.Estimators = {
             throw "Require: IAB.Estimators.State";
         }
 
-        this.update_frequency = 10; // Hz
+        this.update_frequency = args.update_frequency || 10; // Hz
 
         // Associate control action, and state 
         this.control_action = control_action;
-        this.model          = model;
+        this.model = model;
         
         // Copy arrays and start state
         this.state = new IAB.Estimators.State();
@@ -60,7 +60,9 @@ IAB.Estimators = {
                 this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
     
                 this.uncertainty_ellipse.update( null, this.P, 1 );
-                    
+
+                //console.log( numeric.prettyPrint( this.P ) );
+
                 this.last_update_time = Date.now();
 
             }

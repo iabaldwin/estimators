@@ -1,62 +1,58 @@
 var IAB = window.IAB || {};
 
-// Check for the various File API support.
-if (window.File && window.FileReader && window.FileList && window.Blob) {
-} else {
-    alert('The File APIs are not fully supported in this browser.');
-}
+IAB.Tools = {
 
-// Note: The file system has been prefixed as of Google Chrome 12:
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-//window.requestFileSystem( window.TEMPORARY, 1024*1024, init, errorHandler );
+    Plotting: function() {
 
-IAB.Dataserver = {
+        this.math = new IAB.Tools.Math();
+        this.drawCovarianceEllipse = function( state, P, sigma_bound )
+        {
+            // Initialise circle
+            var x_space = numeric.linspace( 0, 2*Math.PI, 100 );
+            var y_space = numeric.linspace( 0, 2*Math.PI, 100 );
+     
+            x_space = x_space.map( function(x){ return Math.cos(x)} );
+            y_space = y_space.map( function(x){ return Math.sin(x)} );
 
-    ROOT: 'http://localhost:8000',
+            var zip =  _.zip( x_space, y_space );
+            
+            // Compute eigenvalues
+            var VD = numeric.eig(P) ;
 
-    STANFORD: 'http://localhost:8000/stanford-gates1/stanford-gates1.log.json'
+            // Compute transformation
+            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
 
-};
+            // Transform points
+            var transforms = _.map( zip, function(x){ return  numeric.dot( transformation,x );} );
 
-
-IAB.IO = {
-
-    JSON: function( json_name, fn )
-    {
-        var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-        xobj.open('GET', json_name, true);
-        xobj.onreadystatechange = function () {
-            if (xobj.readyState == 4) {
-                var json_text = xobj.responseText;
-                fn( json_text );
-            }
+            // Draw
+            var f = Flotr.draw(
+                    $('container'), 
+                    [ transforms ], 
+                    {points: {show: true}});
         }
-        xobj.send(null);
-}
+
+        },
+
+    Math: function()
+    {
+
+        this.matrixSquareRoot = function( M )
+        {
+            /*
+             *Compute the square root of a 2x2 system, using
+             * (1)  Determinant
+             * (2)  Trace
+             */
+
+            // Compute  determinant
+            var sig = numeric.det( M );
+            var s = Math.sqrt( sig );
+            var t = Math.sqrt( (M[0][0] + M[1][1]) + 2*s );
+           
+            return [[(M[0][0]+s)/t, M[0][1]/t],[M[1][0]/t,(M[1][1]+s)/t]];
+        }
+
+    }
+
 };
-
-function Data()
-{
-    this.update = function(data)
-    {
-        this.data = data;
-    }
-
-    this.examine = function()
-    {
-        //var json = JSON.parse(this.data);
-
-        console.log( json[0] );
-        console.log( this.data );
-    }
-}
-
-var d = new Data();
-
-//IAB.IO.JSON( 'log.json', d.update.bind(d) );
-IAB.IO.JSON( IAB.Dataserver.STANFORD, d.update.bind(d) );
-
-//setTimeout( function(){console.log(d.data);}, 1000 );
-setTimeout( d.examine.bind(d), 1000 );
-

@@ -38,17 +38,18 @@ IAB.Graphing =
             {
                 this.geometry.geometry.vertices[i].copy( new THREE.Vector3( ellipse_points[i][0], 0, ellipse_points[i][1] ));
             }
-            
+
             this.geometry.geometry.verticesNeedUpdate= true; 
+
+            //console.log( state );
+            this.geometry.position = new THREE.Vector3( state.x, 0, state.y );
         }
 
-    
+        // Add it to the scene
         args.scene.add(this.geometry);
 
         return this;
-
-    },
-
+    }
     
 };
 

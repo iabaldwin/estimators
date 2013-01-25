@@ -59,9 +59,7 @@ IAB.Estimators = {
                 
                 this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
     
-                this.uncertainty_ellipse.update( null, this.P, 1 );
-
-                //console.log( numeric.prettyPrint( this.P ) );
+                this.uncertainty_ellipse.update( this.state, this.P, 1 );
 
                 this.last_update_time = Date.now();
 

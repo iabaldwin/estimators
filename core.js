@@ -13,7 +13,10 @@ var postRender = function(){}; // Override me
 
 function run()
 {
+    // Initialisaiton routines
     init();
+    
+    // Go...
     animate();
 }
 
@@ -31,7 +34,7 @@ function init() {
     //camera.position = new THREE.Vector3(300,300,300);
     //camera.position = new THREE.Vector3(0,130,0);
     camera.position = new THREE.Vector3(0,100,0);
-    
+
     camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
     // Controls
@@ -65,21 +68,8 @@ function init() {
     stats.domElement.style.top = '0px';
     container.appendChild( stats.domElement );
 
-    //console.log( postInit );
-
     postInit();
 
-    // Build environment
-    landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
-
-    // Add a vehicle
-    vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);
-
-    //// Transition
-    //vehicle.addWaypoint( new THREE.Vector3( 100, 0, 100 ) );
-    //vehicle.addWaypoint( new THREE.Vector3( 0, 0, 0 ) );
-    // Or
-    //var controller = new IAB.Controllers.Wiggle(1,1);
 }
 
 function onWindowResize() {
@@ -120,28 +110,15 @@ function onDocumentKeyUp( event ) {
 
 function animate() {
 
+    // Three
     requestAnimationFrame( animate );
-    render();
+    
+    // 
+    renderer.render( scene, camera );
+    
+    postRender();
     
     stats.update();
 
 }
 
-function render() {
-
-    //camera.position.x = 1400 * Math.sin( THREE.Math.degToRad( theta ) );
-    //camera.position.z = 1400 * Math.cos( THREE.Math.degToRad( theta ) );
-
-    //camera.lookAt( scene.position );
-    //camera.lookAt( vehicle.position() );
-
-    //controls.update( Date.now() - time );    
-    renderer.render( scene, camera );
-    
-    TWEEN.update();
-
-    vehicle.update();
-
-    //time = Date.now();
-
-}

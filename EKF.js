@@ -2,7 +2,7 @@ postInit = function()
 {
 
     // Build environment
-    //landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
+    landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );
 
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);

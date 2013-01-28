@@ -13,7 +13,6 @@ IAB.Components = {
 };
 
 IAB.Sensors=  {
-
  
     Heading: function( update_frequency )
     {

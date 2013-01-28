@@ -16,11 +16,30 @@ IAB.Vehicle =  {
 
         // Sensors
         this.sensors = [];
+        
         //this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
-        this.sensors.push( new IAB.Sensors.FixedRanging(scene, landmarks ) );
-        this.sensors.push( new IAB.Sensors.Odometry() );
-        this.sensors.push( new IAB.Sensors.Velocity( 50 ) );
-       
+        //this.sensors.push( new IAB.Sensors.FixedRanging(scene, landmarks ) );
+        //this.sensors.push( new IAB.Sensors.Odometry() );
+        //this.sensors.push( new IAB.Sensors.Velocity( 50 ) );
+     
+        this.addSensor = function( sensor )
+        {
+
+
+            return this;
+        }
+
+        this.setController = function( controller )
+        {
+            this.controller = controller;
+            return this;
+        }
+
+        this.setModel = function( model )
+        {
+            this.model = model;
+        }
+
         //TMP
         //var geometry = new THREE.CircleGeometry( 4, 50 );
         //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );

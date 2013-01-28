@@ -7,13 +7,19 @@ IAB.Estimators = {
         this.x = x || 0;
         this.y = y || 0;
         this.theta = theta || 0;
-    
    
         this.copy = function( s )
         {
             this.x = s.x;
             this.y = s.y;
             this.theta  = s.theta;
+        }
+        
+        var s,c;
+        this.compose = function( s )
+        {
+            s = Math.sin( s.theta );
+            c = Math.cos( s.theta );
         }
     },
 

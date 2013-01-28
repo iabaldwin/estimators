@@ -5,7 +5,7 @@ IAB.Vehicle =  {
     Holonomic: function( scene, landmarks )
     {
         // Build vehicle representation
-        var vehicle_geometry = new THREE.CircleGeometry( 20, 50 );
+        var vehicle_geometry = new THREE.CircleGeometry( 2, 10 );
         var vehicle_material = new THREE.MeshLambertMaterial( { color: 0x00ff80, ambient: 0x00ff80, shading: THREE.FlatShading, map: THREE.ImageUtils.loadTexture( "../media/texture.jpg" ) } );
         this.mesh            = new THREE.Mesh( vehicle_geometry, vehicle_material );
     
@@ -33,7 +33,7 @@ IAB.Vehicle =  {
         var state = new IAB.Estimators.State();
 
         // Controller - how do we move?
-        var controller = new IAB.Controllers.Constant(.2,10);
+        var controller = new IAB.Controllers.Constant(.2, 1);
 
         // What is the control action *now*?
         var current_control = new IAB.Controllers.ControlInput();
@@ -44,7 +44,7 @@ IAB.Vehicle =  {
         var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
         var Q = [[0,.1],[.1,0]];
 
-        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene, update_frequency:1 });
+        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene, update_frequency:10 });
 
         this.getPosition = function()
         {
@@ -53,6 +53,7 @@ IAB.Vehicle =  {
 
         this.update = function()
         {
+            // Get the position
             var position = this.getPosition(); 
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
 

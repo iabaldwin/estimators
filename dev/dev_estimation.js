@@ -16,13 +16,15 @@ postInit = function(){
             model,
             {update_frequency:2, scene:scene } );
 
-    for( var k=0; k<600; k++ )
+    for( var k=0; k<1; k++ )
     {
         //u = [1, Math.PI/5*Math.sin(4*Math.PI*k/600)];
-        u.copy( new IAB.Controllers.ControlInput( Math.PI/5*Math.sin(4*Math.PI*k/600), 1) );
+        //u.copy( new IAB.Controllers.ControlInput( Math.PI/5*Math.sin(4*Math.PI*k/600), 1) );
+        //u.copy( new IAB.Controllers.ControlInput( 2,1 ) );
+        u.copy( new IAB.Controllers.ControlInput( 2,1 ) );
 
         //estimator.last_update_time = -1;
-        estimator.update( .1 );
+        estimator.update( 1 );
     }
 }
 init();

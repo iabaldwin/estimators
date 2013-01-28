@@ -33,9 +33,9 @@ IAB.Controllers = {
 
         this.update = function()
         {
-            var rotation = Math.PI/5*Math.sin( 4*Math.PI*++counter/1000);
+            var rotational_velocityg = Math.PI/5*Math.sin( 4*Math.PI*(++counter)/1000);
 
-            return new IAB.Controllers.ControlInput( 0, linear_velocity );  
+            return new IAB.Controllers.ControlInput( rotational_velocityg, linear_velocity );  
         }
 
     }

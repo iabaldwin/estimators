@@ -8,8 +8,14 @@ var controls,time=Date.now();
 var vehicle, controller;
 var landmarks;
 
-init();
-animate();
+var postInit = function(){}; // Override me
+var postRender = function(){}; // Override me
+
+function run()
+{
+    init();
+    animate();
+}
 
 function init() {
 
@@ -58,6 +64,10 @@ function init() {
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.top = '0px';
     container.appendChild( stats.domElement );
+
+    //console.log( postInit );
+
+    postInit();
 
     // Build environment
     landmarks = new IAB.Landmark.GenerateRandom( scene, 100 );

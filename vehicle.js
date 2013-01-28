@@ -39,7 +39,7 @@ IAB.Vehicle =  {
         var current_control = new IAB.Controllers.ControlInput();
 
         // Estimation Model
-        var model = new IAB.Models.Ackermann(10); //Wheelbase
+        var model = new IAB.Models.Ackermann(2); //Wheelbase
 
         var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
         var Q = [[0,.1],[.1,0]];

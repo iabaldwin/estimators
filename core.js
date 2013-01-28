@@ -6,10 +6,10 @@ var mouse2D, mouse3D, raycaster,
 
 var controls,time=Date.now();
 var vehicle, controller;
+var landmarks;
 
 init();
 animate();
-var landmarks;
 
 function init() {
 

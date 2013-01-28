@@ -21,20 +21,15 @@ IAB.Tools = {
             //var VD = numeric.eig(P) ;
             var VD = numeric.eig([ [P[0][0], P[0][1]], [P[1][0], P[1][1]] ]) ;
 
+            //console.log( numeric.prettyPrint( this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse()  ) ) ) );
+
             // Compute transformation
             transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
 
             // Transform points
             var transforms = _.map( zip, function(x){ return numeric.dot( transformation,x );} );
 
-            // Draw
-            //if (container){ 
-                //Flotr.draw(
-                    //$('container'), 
-                    //[ transforms ], 
-                    //{points: {show: true}})};
-       
-             return transforms;
+            return transforms;
         }
 
         },
@@ -52,6 +47,7 @@ IAB.Tools = {
 
             // Compute  determinant
             var sig = numeric.det( M );
+           
             var s = Math.sqrt( sig );
             var t = Math.sqrt( (M[0][0] + M[1][1]) + 2*s );
            

@@ -2,7 +2,7 @@ var IAB = window.IAB || {};
 
 IAB.Controllers = {
 
-    ControlInput: function( u,v )
+    ControlInput: function( u, v )
     {
         this.u = u || 0;
         this.v = v || 0;
@@ -15,18 +15,29 @@ IAB.Controllers = {
 
     },
 
-
-    Wiggle: function( linear_velocity, angular_velocity )
+    Constant: function( angular_velocity, linear_velocity )
     {
-        this.current_control;
-
         this.update = function()
         {
-            var control = new IAB.Controllers.ControlInput( linear_velocity, angular_velocity );  
+            var control = new IAB.Controllers.ControlInput( angular_velocity, linear_velocity );  
             
             return control;
         }
-    }
+    },
 
+    Wiggle: function( linear_velocity )
+    {
+        this.current_control;
+
+        var counter = 0;
+
+        this.update = function()
+        {
+            var rotation = Math.PI/5*Math.sin( 4*Math.PI*++counter/1000);
+
+            return new IAB.Controllers.ControlInput( 0, linear_velocity );  
+        }
+
+    }
 
 };

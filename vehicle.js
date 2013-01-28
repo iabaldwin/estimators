@@ -33,7 +33,7 @@ IAB.Vehicle =  {
         var state = new IAB.Estimators.State();
 
         // Controller - how do we move?
-        var controller = new IAB.Controllers.Wiggle(.2,10);
+        var controller = new IAB.Controllers.Constant(.2,10);
 
         // What is the control action *now*?
         var current_control = new IAB.Controllers.ControlInput();

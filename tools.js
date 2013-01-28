@@ -9,8 +9,8 @@ IAB.Tools = {
         this.covarianceEllipse = function( P, sigma_bound )
         {
             // Initialise circle
-            var x_space = numeric.linspace( 0, 2*Math.PI, 100 );
-            var y_space = numeric.linspace( 0, 2*Math.PI, 100 );
+            var x_space = numeric.linspace( 0, Math.PI, 100 );
+            var y_space = numeric.linspace( 0, Math.PI, 100 );
 
             // Scale
             x_space = x_space.map( function(x){ return 1*Math.cos(x)} );
@@ -21,8 +21,8 @@ IAB.Tools = {
             var VD = numeric.eig([ [P[0][0], P[0][1]], [P[1][0], P[1][1]] ]) ;
 
             // Compute transformation
-            //transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
-            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x ))) ;
+            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
+            //transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x ))) ;
 
             // Transform points
             var transforms = _.map( zip, function(x){ return numeric.dot( transformation,x );} );

@@ -23,7 +23,8 @@ function init() {
     //camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
     camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
     //camera.position = new THREE.Vector3(300,300,300);
-    camera.position = new THREE.Vector3(0,130,0);
+    //camera.position = new THREE.Vector3(0,130,0);
+    camera.position = new THREE.Vector3(0,100,0);
     
     camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 

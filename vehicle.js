@@ -41,8 +41,11 @@ IAB.Vehicle =  {
         // Estimation Model
         var model = new IAB.Models.Ackermann(2); //Wheelbase
 
-        var P = [[.2,0,0],[0,.2,0],[0,0,.2]];
-        var Q = [[0,.1],[.1,0]];
+        var SigmaPhi = 4*Math.PI/180;
+        var SigmaV = .1;
+
+        var P = [[.2,0,0],[0,.2,0],[0,0,0]];
+        var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
 
         var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene, update_frequency:10 });
 
@@ -61,10 +64,11 @@ IAB.Vehicle =  {
             // Update the control action
             current_control.copy(  controller.update() );
           
-            var dt = Date.now() - last_update_time;
+            var dt = (Date.now() - last_update_time)/1000;
 
             // Get the new state
             state = model.predict( state, current_control, dt );
+            //state = model.predict( state, current_control, .1 );
             
             this.mesh.position.x = state.x;
             this.mesh.position.z = state.y;

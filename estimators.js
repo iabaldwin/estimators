@@ -44,9 +44,9 @@ IAB.Estimators = {
 
         this.update = function( dt )
         {
-            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
-            {
-                dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency)
+            //if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
+            //{
+                //dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency)
 
                 //Compute Jacobians
                 var JacFx = [[1,0,-dt*this.control_action.v*Math.sin( this.state.theta)],
@@ -63,9 +63,11 @@ IAB.Estimators = {
 
                 this.state = model.predict( this.state, this.control_action, dt, model.L );
 
+                console.log( this.state );
+
                 this.last_update_time = Date.now();
 
-            }
+            //}
         }
     }
 };

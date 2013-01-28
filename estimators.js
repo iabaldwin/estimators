@@ -46,7 +46,10 @@ IAB.Estimators = {
         {
             if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
-                dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency)
+                dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency);
+
+                console.log( dt );
+
 
                 //Compute Jacobians
                 var JacFx = [[1,0,-dt*this.control_action.v*Math.sin( this.state.theta)],
@@ -62,7 +65,7 @@ IAB.Estimators = {
 
                 this.uncertainty_ellipse.update( this.state, this.P, .5);
 
-                this.state = model.predict( this.state, this.control_action, dt, model.L );
+                this.state = model.predict( this.state, this.control_action, dt );
 
                 this.last_update_time = Date.now();
 

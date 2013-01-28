@@ -36,7 +36,7 @@ function init() {
     // Projection estimation
     projector = new THREE.Projector();
 
-    plane = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000, 20, 20 ), new THREE.MeshBasicMaterial( { color: 0x555555, wireframe: true } ) );
+    plane = new THREE.Mesh( new THREE.PlaneGeometry( 200, 200, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x555555, wireframe: true } ) );
     plane.rotation.x = - Math.PI / 2;
     scene.add( plane );
 

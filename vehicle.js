@@ -22,7 +22,7 @@ IAB.Vehicle =  {
         this.sensors.push( new IAB.Sensors.Velocity( 50 ) );
        
         //TMP
-        //var geometry = new THREE.CircleGeometry( 20, 50 );
+        //var geometry = new THREE.CircleGeometry( 4, 50 );
         //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
         //var odometry_mesh = new THREE.Mesh( geometry, material );
         //scene.add( odometry_mesh );
@@ -51,6 +51,7 @@ IAB.Vehicle =  {
             return this.mesh.position;
         }
 
+        var last_update_time = Date.now();
         this.update = function()
         {
             // Get the position
@@ -59,15 +60,19 @@ IAB.Vehicle =  {
 
             // Update the control action
             current_control.copy(  controller.update() );
-            
-            // Predict the state
-            state = model.predict( state, current_control, .1, 10 );
+          
+            var dt = Date.now() - last_update_time;
+
+            // Get the new state
+            state = model.predict( state, current_control, dt );
             
             this.mesh.position.x = state.x;
             this.mesh.position.z = state.y;
 
             // Estimate
             estimator.update();
+       
+            last_update_time = Date.now();
         }
 
         this.tweenUpdate = function(obj,b)

@@ -48,9 +48,6 @@ IAB.Estimators = {
             {
                 dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency);
 
-                console.log( dt );
-
-
                 //Compute Jacobians
                 var JacFx = [[1,0,-dt*this.control_action.v*Math.sin( this.state.theta)],
                             [0,1,dt*this.control_action.v*Math.cos(this.state.theta)],

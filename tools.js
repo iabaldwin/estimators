@@ -21,8 +21,8 @@ IAB.Tools = {
             var VD = numeric.eig([ [P[0][0], P[0][1]], [P[1][0], P[1][1]] ]) ;
 
             // Compute transformation
-            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
-            //transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x ))) ;
+            //transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
+            transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x ))) ;
 
             // Transform points
             var transforms = _.map( zip, function(x){ return numeric.dot( transformation,x );} );

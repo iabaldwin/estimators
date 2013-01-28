@@ -23,8 +23,6 @@ postInit = function(){
 
         //estimator.last_update_time = -1;
         estimator.update( .1 );
-
-        console.log( u );
     }
 }
 init();

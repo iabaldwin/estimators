@@ -39,8 +39,10 @@ IAB.Graphing =
                 this.geometry.geometry.vertices[i].copy( new THREE.Vector3( ellipse_points[i][0], 0, ellipse_points[i][1] ));
             }
 
-            this.geometry.position = new THREE.Vector3( state.x, 0, state.y );
-            
+            this.geometry.position.x = state.x;
+            this.geometry.position.z = state.y;
+
+            //Update
             this.geometry.geometry.verticesNeedUpdate= true; 
         }
 

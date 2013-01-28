@@ -47,7 +47,6 @@ IAB.Tools = {
 
             // Compute  determinant
             var sig = numeric.det( M );
-           
             var s = Math.sqrt( sig );
             var t = Math.sqrt( (M[0][0] + M[1][1]) + 2*s );
            

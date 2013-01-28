@@ -53,11 +53,10 @@ IAB.Estimators = {
                             [0,1,dt*this.control_action.v*Math.cos(this.state.theta)],
                             [0,0,1]];
 
-
-                var JacFu =  [[dt*Math.cos( this.state.theta), 0],
-                        [dt*Math.sin( this.state.theta), 0],
-                        [dt*Math.tan(this.control_action.u/this.model.L), dt*this.control_action.v*this.math.sec(Math.pow(this.control_action.v,2))]];
-                
+                var JacFu = [[dt*Math.cos( this.state.theta), 0],
+                            [dt*Math.sin( this.state.theta), 0],
+                            [dt*Math.tan(this.control_action.u)/this.model.L, dt*this.control_action.u*Math.pow(this.math.sec(this.control_action.u),2)]];
+              
                 this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
 
                 this.uncertainty_ellipse.update( this.state, this.P, .5);

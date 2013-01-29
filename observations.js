@@ -2,6 +2,7 @@ var IAB = window.IAB || {};
 
 IAB.Observations = 
 {
+    math: new IAB.Tools.Math(),
 
     RangingModel: function( landmarks, debug )
     {
@@ -28,7 +29,6 @@ IAB.Observations =
             }
         }
 
-
         this.update = function( vehicle_position )
         {
             var tmp = new THREE.Vector3(), loc;
@@ -42,7 +42,7 @@ IAB.Observations =
 
                 var range = loc.length();
 
-                var angle = Math.atan2( loc.x, loc.y )  - vehicle_position.theta;
+                var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - vehicle_position.theta );
 
                 observations.push( {range:range, angle:angle} );
 

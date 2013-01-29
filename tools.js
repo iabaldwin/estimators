@@ -54,5 +54,10 @@ IAB.Tools = {
         {
             return 1/Math.cos(val);
         }
+
+        this.angleWrap = function( angle )
+        {
+            return angle % ( 2*Math.PI );
+        }
     }
 };

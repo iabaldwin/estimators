@@ -96,7 +96,7 @@ IAB.Vehicle =  {
             this.mesh.position.x = this.state.x;
             this.mesh.position.z = this.state.y;
 
-            this.observation_model.update( this.state );
+            var observations = this.observation_model.update( this.state );
 
             // Estimate
             this.estimator.update();

@@ -8,8 +8,8 @@ var controls,time=Date.now();
 var vehicle, controller;
 var landmarks;
 
-var postInit = function(){}; // Override me
-var postRender = function(){}; // Override me
+var postInit = function(){ throw "Must be overridden"; }; // Override me
+var postRender = function(){ throw "Must be overridden";}; // Override me
 
 function run()
 {

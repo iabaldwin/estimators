@@ -2,32 +2,11 @@ var IAB = window.IAB || {};
 
 IAB.Estimators = {
 
-    State: function( x,y,theta )
-    {
-        this.x = x || 0;
-        this.y = y || 0;
-        this.theta = theta || 0;
-   
-        this.copy = function( s )
-        {
-            this.x = s.x;
-            this.y = s.y;
-            this.theta  = s.theta;
-        }
-        
-        var s,c;
-        this.compose = function( s )
-        {
-            s = Math.sin( s.theta );
-            c = Math.cos( s.theta );
-        }
-    },
-
     EKF: function( start_state, P, Q, control_action, model, args )
     {
-        if ( !(start_state instanceof IAB.Estimators.State ))
+        if ( !(start_state instanceof IAB.Robotics.SE2 ))
         {
-            throw "Require: IAB.Estimators.State";
+            throw "Require: IAB.Robotics.SE2 ";
         }
 
         this.update_frequency = args.update_frequency || 10; // Hz
@@ -37,7 +16,7 @@ IAB.Estimators = {
         this.model = model;
         
         // Copy arrays and start state
-        this.state = new IAB.Estimators.State();
+        this.state = new IAB.Robotics.SE2();
         this.state.copy( start_state );
         this.P = P.slice(0);
         this.Q = Q.slice(0);

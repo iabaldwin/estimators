@@ -49,7 +49,7 @@ IAB.Vehicle =  {
         //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
         // Initial state
-        var state = new IAB.Estimators.State();
+        var state = new IAB.Robotics.SE2();
 
         // Controller - how do we move?
         var controller = new IAB.Controllers.Constant(.2, 1);

@@ -24,8 +24,7 @@ IAB.Vehicle =  {
      
         this.addSensor = function( sensor )
         {
-
-
+            this.sensors.push( sensor );
             return this;
         }
 
@@ -38,6 +37,7 @@ IAB.Vehicle =  {
         this.setModel = function( model )
         {
             this.model = model;
+            return this; 
         }
 
         //TMP
@@ -59,12 +59,16 @@ IAB.Vehicle =  {
         var current_control = new IAB.Controllers.ControlInput();
 
         // Estimation Model
-        var model = new IAB.Models.Ackermann(2); //Wheelbase
+        //var model = new IAB.Models.Ackermann(2); //Wheelbase
 
+        // Initial uncertainty
         var SigmaPhi = 4*Math.PI/180;
         var SigmaV = .1;
 
+        // Process uncertainty
         var P = [[.2,0,0],[0,.2,0],[0,0,0]];
+        
+        // Input uncertainty
         var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
 
         var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene, update_frequency:10 });

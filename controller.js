@@ -38,6 +38,11 @@ IAB.Controllers = {
             return new IAB.Controllers.ControlInput( rotational_velocityg, linear_velocity );  
         }
 
+    },
+
+    Direct: function( x,y,theta )
+    {
+
     }
 
 };

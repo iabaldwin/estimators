@@ -6,6 +6,9 @@ postInit = function()
 
     // Add a vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks);
+    
+    vehicle.addSensor( new IAB.Sensors.Velocity() );
+
 
     //// Transition
     //vehicle.addWaypoint( new THREE.Vector3( 100, 0, 100 ) );

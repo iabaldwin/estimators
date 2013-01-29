@@ -38,7 +38,7 @@ IAB.Sensors=  {
             if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 // Get ground-truth motion
-                delta.sub( robot_location,this.previous_location );
+                delta.sub( robot_location, this.previous_location );
 
                 var vel = delta.length()/( (Date.now() - this.last_update_time) /1000);
 

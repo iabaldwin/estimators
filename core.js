@@ -30,7 +30,15 @@ function init() {
 
     // Camera
     //camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
-    camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
+    //camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
+    //camera = new THREE.PerspectiveCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
+   
+    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+   
+    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+   
+    camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR); 
+
     camera.position = new THREE.Vector3(100,100,100);
     //camera.position = new THREE.Vector3(0,130,0);
     //camera.position = new THREE.Vector3(0,100,0);

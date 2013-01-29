@@ -4,7 +4,7 @@ IAB.Landmark =  {
     
     Point: function( position )
     {
-        this.geometry = new THREE.CircleGeometry( 5, 20 );
+        this.geometry = new THREE.CircleGeometry( 2, 20 );
         this.material = new THREE.MeshBasicMaterial( { color: 0xff0000} );
         this.mesh    = new THREE.Mesh( this.geometry, this.material );
 
@@ -25,10 +25,12 @@ IAB.Landmark =  {
     {
         var landmarks = [];
 
+        var upper_limit = 200;
+
         for ( var i = 0; i<num_landmarks; i++ )
         {
             // Randomise position
-            var landmark_location = new THREE.Vector3( Math.random()*1000-500,0, Math.random()*1000-500);
+            var landmark_location = new THREE.Vector3( Math.random()*upper_limit - (upper_limit/2), Math.random()*upper_limit - (upper_limit/2));
 
             // Create landmark
             var landmark = new IAB.Landmark.Point(landmark_location); 

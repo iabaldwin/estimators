@@ -13,15 +13,14 @@ IAB.Tools = {
             var y_space = numeric.linspace( 0, 2*Math.PI, 100 );
 
             // Scale
-            x_space = x_space.map( function(x){ return 10*Math.cos(x)} );
-            y_space = y_space.map( function(x){ return 10*Math.sin(x)} );
+            x_space = x_space.map( function(x){ return 1*Math.cos(x)} );
+            y_space = y_space.map( function(x){ return 1*Math.sin(x)} );
             var zip = _.zip( x_space, y_space );
 
             // Compute eigenvalues
             var VD = numeric.eig([ [P[0][0], P[0][1]], [P[1][0], P[1][1]] ]) ;
 
             // Compute transformation
-            //transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x.reverse() ))) ;
             transformation = numeric.dot( VD.E.x, this.math.matrixSquareRoot( numeric.diag( VD.lambda.x ))) ;
 
             // Transform points

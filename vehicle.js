@@ -40,6 +40,24 @@ IAB.Vehicle =  {
             return this; 
         }
 
+        this.setEstimator = function( estimator )
+        {
+            this.estimator = estimator;
+            return this;
+        }
+
+        this.initialState = function( state )
+        {
+            this.state = state;
+            return this;
+        }
+
+        this.controlInput = function( control_input )
+        {
+            this.control_input = control_input;
+            return this;
+        }
+
         //TMP
         //var geometry = new THREE.CircleGeometry( 4, 50 );
         //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
@@ -47,31 +65,6 @@ IAB.Vehicle =  {
         //scene.add( odometry_mesh );
         //odometry_mesh.position = this.sensors[1].estimate ;
         //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
-
-        // Initial state
-        var state = new IAB.Robotics.SE2();
-
-        // Controller - how do we move?
-        var controller = new IAB.Controllers.Constant(.2, 1);
-        //var controller = new IAB.Controllers.Wiggle(3);
-
-        // What is the control action *now*?
-        var current_control = new IAB.Controllers.ControlInput();
-
-        // Estimation Model
-        //var model = new IAB.Models.Ackermann(2); //Wheelbase
-
-        // Initial uncertainty
-        var SigmaPhi = 4*Math.PI/180;
-        var SigmaV = .1;
-
-        // Process uncertainty
-        var P = [[.2,0,0],[0,.2,0],[0,0,0]];
-        
-        // Input uncertainty
-        var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
-
-        var estimator = new IAB.Estimators.EKF( state, P, Q, current_control, model, {scene:scene, update_frequency:10 });
 
         this.getPosition = function()
         {
@@ -86,19 +79,19 @@ IAB.Vehicle =  {
             this.sensors.forEach( function(sensor){ sensor.update( position ); } );
 
             // Update the control action
-            current_control.copy(  controller.update() );
-          
+            this.control_input.copy(  this.controller.update() );
+        
             var dt = (Date.now() - last_update_time)/1000;
 
             // Get the new state
-            state = model.predict( state, current_control, dt );
-            //state = model.predict( state, current_control, .1 );
-            
-            this.mesh.position.x = state.x;
-            this.mesh.position.z = state.y;
+            this.state = this.model.predict( this.state, this.control_input, dt );
+           
+            // Update the mesh, take care wrt. coordinate-systems
+            this.mesh.position.x = this.state.x;
+            this.mesh.position.z = this.state.y;
 
             // Estimate
-            estimator.update();
+            this.estimator.update();
        
             last_update_time = Date.now();
         }

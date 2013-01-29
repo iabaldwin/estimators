@@ -15,23 +15,27 @@ IAB.Robotics = {
             this.theta  = s.theta;
         }
         
-        this.composeSelf = function( s )
+        this.composeSelf = function( s1 )
         {
-            var angle = this.theta + s.theta;
+            var angle = this.theta + s1.theta;
+          
+            angle = (angle > Math.PI || angle <= -1*Math.PI) ? angle % (2*Math.PI)  : angle ;
 
-            var s = Math.sin( s.theta );
-            var c = Math.cos( s.theta );
+            var s = Math.sin( this.theta );
+            var c = Math.cos( this.theta );
        
-            //var result = numeric.add( [s.x s.y], numeric.dot( [[c,-1*s],[s,c]], 
+            var result = numeric.add( [this.x,this.y], numeric.dot( [[c,-1*s],[s,c]], [s1.x, s1.y]) );
+
+            this.x = result[0];
+            this.y = result[1];
+            this.theta  = angle;
         }
 
         this.compose = function( s1, s2 )
         {
             var angle = s1.theta + s2.theta;
 
-            console.log( angle );
             angle = (angle > Math.PI || angle <= -1*Math.PI) ? angle % (2*Math.PI)  : angle ;
-            console.log( angle );
 
             var s = Math.sin( s1.theta );
             var c = Math.cos( s1.theta );

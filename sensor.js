@@ -95,7 +95,7 @@ IAB.Sensors=  {
         }
     },
 
-    FixedRanging: function(scene, landmarks, num_landmarks, update_frequency )
+    Ranging: function(scene, landmarks, num_landmarks, update_frequency )
     {
         this.last_update_time = Date.now();
         
@@ -137,7 +137,7 @@ IAB.Sensors=  {
     
     },
 
-    Ranging: function( scene, landmarks, range, update_frequency )
+    Temp: function( scene, landmarks, range, update_frequency )
     {
         // Parameters
         this.range = range || 100;

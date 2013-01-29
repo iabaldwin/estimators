@@ -15,7 +15,7 @@ IAB.Estimators = {
         this.control_action = control_action;
         this.model = model;
         
-        // Copy arrays and start state
+        // Copy arrays and start state : the filter retains its own estimate of hte state
         this.state = new IAB.Robotics.SE2();
         this.state.copy( start_state );
         this.P = P.slice(0);

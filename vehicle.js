@@ -58,6 +58,12 @@ IAB.Vehicle =  {
             return this;
         }
 
+        this.observationModel = function( model )
+        {
+            this.observation_model = model;
+            return this;
+        }
+
         //TMP
         //var geometry = new THREE.CircleGeometry( 4, 50 );
         //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
@@ -90,9 +96,11 @@ IAB.Vehicle =  {
             this.mesh.position.x = this.state.x;
             this.mesh.position.z = this.state.y;
 
+            this.observation_model.update( position );
+
             // Estimate
             this.estimator.update();
-       
+
             last_update_time = Date.now();
         }
 

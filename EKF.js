@@ -26,6 +26,12 @@ postInit = function()
     // Estimator type
     var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, {scene:scene, update_frequency:20 });
 
+    // Sensors
+    var LIDAR = new IAB.Sensors.Ranging( scene, landmarks, 4, 2 );
+
+    // Observation model
+    var observation_model = new IAB.Observations.RangingModel( landmarks );
+
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks );
     
@@ -33,8 +39,9 @@ postInit = function()
             .setModel( model )
             .controlInput( control_input )
             .initialState( state )
-            .setEstimator( estimator );
-    
+            .setEstimator( estimator )
+            .addSensor( LIDAR )
+            .observationModel( observation_model );;
 }
 
 postRender = function()

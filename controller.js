@@ -2,6 +2,20 @@ var IAB = window.IAB || {};
 
 IAB.Controllers = {
 
+    /*
+     *These controllers assume the plant model:
+     *
+     *  x -> [ P ] -> x'
+     *         ^
+     *         |
+     *         u
+     *
+     * Where (u) are the input variables, P the
+     * plant model and x, and x' the initial and
+     * resulting state respectively.
+     */
+
+
     ControlInput: function( u, v )
     {
         this.u = u || 0;
@@ -39,6 +53,17 @@ IAB.Controllers = {
         }
 
     },
+
+    /*
+     *These controllers assume the model:
+     *
+     *  x' = x (+) x_d
+     *
+     *  where x' is the state resulting
+     *  from the *composition* of state
+     *  x and state delta x_d
+     *
+     */
 
     Direct: function( x,y,theta )
     {

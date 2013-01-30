@@ -78,6 +78,9 @@ IAB.Vehicle =  {
         }
 
         var last_update_time = Date.now();
+        
+       
+        this.math = new IAB.Tools.Math();
         this.update = function()
         {
             // Get the position
@@ -96,13 +99,27 @@ IAB.Vehicle =  {
             this.mesh.position.x = this.state.x;
             this.mesh.position.z = this.state.y;
 
-            var observations = this.observation_model.update( this.state );
-
-            var random_observation = observations[Math.floor( Math.random()*observations.length )];
+            
+            // Do: measurement
+            var random_landmark = Math.floor( Math.random()*landmarks.length );
+            var z = this.observation_model.update( this.state, random_landmark );
+            
+            // Do: prediction
+            var z_hat = this.observation_model.update( this.estimator.state, random_landmark );
 
             // Compute: Measurement jacobian
-            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, random_observation );
+            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, random_landmark );
 
+            // Compute: innovation
+            var innov = numeric.sub( z, z_hat ); 
+            // Wrap
+            innov[1] = this.math.angleWrap( innov[1] );
+        
+            // Compute: Covariance Innovation
+            var S = numeric.dot( numeric.dot( jacobian, this.estimator.P ), jacobian );
+
+            console.log( S );
+            
             // Compute: Innovation
 
 

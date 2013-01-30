@@ -32,46 +32,48 @@ IAB.Observations =
             }
         }
 
-        this.update = function( vehicle_position )
+        this.update = function( state, landmark_id )
         {
             var tmp = new THREE.Vector3(), loc;
 
-            var observations = [];
+            //var observations = [];
 
-            for( var i=0; i<landmarks.length; i++ )
-            {
+            //for( var i=0; i<landmarks.length; i++ )
+            //{
                 // Subtract out the map
-                loc = tmp.sub( new THREE.Vector3( vehicle_position.x, 0, vehicle_position.y ), landmarks[i] );
+                loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmarks[landmark_id] );
 
                 var range = loc.length();
 
-                var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - vehicle_position.theta );
+                var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - state.theta );
 
-                observations.push( {range:range, angle:angle} );
+                //var observations = {range:range, angle:angle};
 
-                if (this.debug)
-                {
-                    var line = this.lines[i];
+                var observations = [range,angle];
 
-                    //line.geometry.vertices[0].copy( vehicle_position );
-                    line.geometry.vertices[0].x = vehicle_position.x;
-                    line.geometry.vertices[0].z = vehicle_position.y;
+                //if (this.debug)
+                //{
+                    //var line = this.lines[landmark_id];
 
-                    line.geometry.vertices[1].copy( landmarks[i].position );
+                    ////line.geometry.vertices[0].copy( state );
+                    //line.geometry.vertices[0].x = state.x;
+                    //line.geometry.vertices[0].z = state.y;
 
-                    line.geometry.verticesNeedUpdate = true;
-                }
-            }
+                    //line.geometry.vertices[1].copy( landmarks[landmark_id].position );
+
+                    //line.geometry.verticesNeedUpdate = true;
+                //}
+            //}
 
             return observations;
         }
     },
 
-    MeasurementJacobian: function( vehicle_position, landmark )
+    MeasurementJacobian: function( state, landmark )
     {
         var tmp = new THREE.Vector3(), loc;
 
-        var loc = tmp.sub( new THREE.Vector3( vehicle_position.x, 0, vehicle_position.y ), landmark );
+        var loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmark );
 
         var range = loc.length(); 
 

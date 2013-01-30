@@ -126,9 +126,8 @@ IAB.Vehicle =  {
             var P = numeric.dot( numeric.dot( numeric.sub( I, numeric.dot( W, jacobian) ), this.estimator.P  ), 
                                 numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) );
 
-            //console.log( numeric.prettyPrint( P ) );
-
-
+            P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
+                
             // Estimate
             this.estimator.update();
 

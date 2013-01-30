@@ -47,6 +47,10 @@ IAB.Estimators = {
 
                 this.uncertainty_ellipse.update( this.state, this.P, .5);
 
+                this.state.x += Math.random()/100;
+                this.state.y += Math.random()/100;
+                this.state.theta += Math.random()/100;
+
                 this.state = model.predict( this.state, this.control_action, dt );
 
                 this.last_update_time = Date.now();

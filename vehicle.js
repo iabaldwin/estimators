@@ -101,7 +101,7 @@ IAB.Vehicle =  {
             var random_observation = observations[Math.floor( Math.random()*observations.length )];
 
             // Compute: Measurement jacobian
-            var jacobian = IAB.Observations.MeasurementJacobian( this.state, random_observation );
+            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, random_observation );
 
             // Compute: Innovation
 

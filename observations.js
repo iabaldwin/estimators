@@ -6,13 +6,16 @@ IAB.Observations =
 
     RangingModel: function( landmarks, debug )
     {
-        if (debug)
+        this.debug = debug;
+
+        if (this.debug)
         {
+            this.lines = [];
+            
             var material = new THREE.LineBasicMaterial({
                 color: 0x0000ff,
             });
 
-            var lines = [];
             for ( var i=0; i<landmarks.length; i++ )
             {
             
@@ -25,7 +28,7 @@ IAB.Observations =
               
                 scene.add(line);
 
-                lines.push( line );
+                this.lines.push( line );
             }
         }
 
@@ -46,11 +49,14 @@ IAB.Observations =
 
                 observations.push( {range:range, angle:angle} );
 
-                if (debug)
+                if (this.debug)
                 {
-                    var line = lines[i];
+                    var line = this.lines[i];
 
-                    line.geometry.vertices[0].copy( vehicle_position );
+                    //line.geometry.vertices[0].copy( vehicle_position );
+                    line.geometry.vertices[0].x = vehicle_position.x;
+                    line.geometry.vertices[0].z = vehicle_position.y;
+
                     line.geometry.vertices[1].copy( landmarks[i].position );
 
                     line.geometry.verticesNeedUpdate = true;

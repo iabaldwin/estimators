@@ -30,7 +30,7 @@ postInit = function()
     var LIDAR = new IAB.Sensors.Ranging( scene, landmarks, 4, 2 );
 
     // Observation model
-    var observation_model = new IAB.Observations.RangingModel( landmarks );
+    var observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks );

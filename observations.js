@@ -65,5 +65,27 @@ IAB.Observations =
 
             return observations;
         }
+    },
+
+    MeasurementJacobian: function( vehicle_position, landmark )
+    {
+        var tmp = new THREE.Vector3(), loc;
+
+        var loc = tmp.sub( new THREE.Vector3( vehicle_position.x, 0, vehicle_position.y ), landmark );
+
+        var range = loc.length(); 
+
+        var rangeSq = loc.lengthSq();
+
+        var jacobian = [[0,0,0],[0,0,0]];
+
+        jacobian[0][0] = -1*loc.x / range;
+        jacobian[0][1] = loc.z / range;
+        jacobian[1][0] = loc.z / rangeSq;
+        jacobian[1][1] = -1*loc.x / rangeSq;
+        jacobian[1][2] = -1;
+
     }
+
+
 };

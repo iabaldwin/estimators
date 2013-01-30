@@ -127,7 +127,19 @@ IAB.Vehicle =  {
                                 numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) );
 
             P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
-                
+          
+            //this.estimator.state = 
+
+            var tmp = numeric.add( [this.estimator.state.x, this.estimator.state.y, this.estimator.state.theta], numeric.dot( W, innov ) );
+
+            //console.log( numeric.prettyPrint( tmp ) );
+
+            this.estimator.state.x = tmp[0];
+            this.estimator.state.y = tmp[1];
+            this.estimator.state.theta = this.math.angleWrap( tmp[2] );
+
+            console.log( this.estimator.state );
+
             // Estimate
             this.estimator.update();
 

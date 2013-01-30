@@ -108,19 +108,25 @@ IAB.Vehicle =  {
             var z_hat = this.observation_model.update( this.estimator.state, random_landmark );
 
             // Compute: Measurement jacobian
-            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, random_landmark );
+            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, landmarks[random_landmark] );
 
-            // Compute: innovation
+            // Compute: Innovation
             var innov = numeric.sub( z, z_hat ); 
             // Wrap
             innov[1] = this.math.angleWrap( innov[1] );
         
             // Compute: Covariance Innovation
-            var S = numeric.dot( numeric.dot( jacobian, this.estimator.P ), jacobian );
-
-            console.log( S );
+            var S = numeric.dot( numeric.dot( jacobian, this.estimator.P ), numeric.transpose( jacobian ) );
             
-            // Compute: Innovation
+            // Compute: Kalman Gain
+            var W = numeric.dot( numeric.dot( this.estimator.P, jacobian ), numeric.inv( S ) );
+
+            // Compute update in Joseph form
+            var I = numeric.identity(3);
+            var P = numeric.dot( numeric.dot( numeric.sub( I, numeric.dot( W, jacobian) ), this.estimator.P  ), 
+                                numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) );
+
+            //console.log( numeric.prettyPrint( P ) );
 
 
             // Estimate

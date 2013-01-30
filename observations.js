@@ -85,6 +85,7 @@ IAB.Observations =
         jacobian[1][1] = -1*loc.x / rangeSq;
         jacobian[1][2] = -1;
 
+        return jacobian;
     }
 
 

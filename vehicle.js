@@ -98,11 +98,13 @@ IAB.Vehicle =  {
 
             var observations = this.observation_model.update( this.state );
 
-            var random_observation = observations[Math.floor( Math.random()*observations.length() )];
+            var random_observation = observations[Math.floor( Math.random()*observations.length )];
 
-            var jacobian = new IAB.Observations.MeasurementJacobian( this.state, random_observation );
+            // Compute: Measurement jacobian
+            var jacobian = IAB.Observations.MeasurementJacobian( this.state, random_observation );
 
-            console.log( jacobian );
+            // Compute: Innovation
+
 
             // Estimate
             this.estimator.update();

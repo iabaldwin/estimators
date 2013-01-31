@@ -6,8 +6,6 @@ IAB.Estimators = {
     {
         if ( !(start_state instanceof IAB.Robotics.SE2 )){throw "Require: IAB.Robotics.SE2 ";}
 
-        console.log( args.scene );
-
         this.update_frequency = args.update_frequency || 10; // Hz
 
         // Associate control action, and state 

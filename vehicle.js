@@ -77,6 +77,7 @@ IAB.Vehicle =  {
         this.measurement_available = true;
 
         this.math = new IAB.Tools.Math();
+        
         this.update = function()
         {
             // Get the position
@@ -101,10 +102,11 @@ IAB.Vehicle =  {
             //Measurement available?
             if (this.measurement_available)
             { 
+                console.log( 'hi' );
                 // Do: measurement
                 var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
            
-                this.estimator.update( random_landmark );
+                //this.estimator.update( random_landmark );
             }
             else
             {

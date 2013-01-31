@@ -1,3 +1,4 @@
+//var landmarks, control_input, controller, model, estimator, LIDAR, observation_model
 postInit = function()
 {
 
@@ -5,7 +6,7 @@ postInit = function()
     var landmarks = new IAB.Landmark.GenerateRandom( scene, 20 );
 
     // Controller type
-    var controller = new IAB.Controllers.Constant(.02, 10);
+    var controller = new IAB.Controllers.Constant(.2, 2);
         
     // Controller input
     var control_input = new IAB.Controllers.ControlInput();
@@ -24,13 +25,10 @@ postInit = function()
     var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
 
     // Estimator type
-    var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, {scene:scene, update_frequency:20 });
+    var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
 
     // Sensors
     var LIDAR = new IAB.Sensors.Ranging( scene, landmarks, 4, 2 );
-
-    // Observation model
-    var observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks );
@@ -40,8 +38,8 @@ postInit = function()
             .controlInput( control_input )
             .initialState( state )
             .setEstimator( estimator )
-            .addSensor( LIDAR )
-            .observationModel( observation_model );;
+            .addSensor( LIDAR );
+            
 }
 
 postRender = function()

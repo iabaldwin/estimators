@@ -4,6 +4,7 @@ IAB.Vehicle =  {
 
     Holonomic: function( scene, landmarks )
     {
+
         // Build vehicle representation
         var vehicle_geometry = new THREE.CircleGeometry( 2, 10 );
         var vehicle_material = new THREE.MeshLambertMaterial( { color: 0x00ff80, ambient: 0x00ff80, shading: THREE.FlatShading, map: THREE.ImageUtils.loadTexture( "../media/texture.jpg" ) } );
@@ -58,12 +59,6 @@ IAB.Vehicle =  {
             return this;
         }
 
-        this.observationModel = function( model )
-        {
-            this.observation_model = model;
-            return this;
-        }
-
         //TMP
         //var geometry = new THREE.CircleGeometry( 4, 50 );
         //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
@@ -79,7 +74,8 @@ IAB.Vehicle =  {
 
         var last_update_time = Date.now();
         
-       
+        this.measurement_available = true;
+
         this.math = new IAB.Tools.Math();
         this.update = function()
         {
@@ -99,50 +95,22 @@ IAB.Vehicle =  {
             this.mesh.position.x = this.state.x;
             this.mesh.position.z = this.state.y;
 
-            
-            // Do: measurement
-            var random_landmark = Math.floor( Math.random()*landmarks.length );
-            var z = this.observation_model.update( this.state, random_landmark );
-            
-            // Do: prediction
-            var z_hat = this.observation_model.update( this.estimator.state, random_landmark );
-
-            // Compute: Measurement jacobian
-            var jacobian = IAB.Observations.MeasurementJacobian( this.estimator.state, landmarks[random_landmark] );
-
-            // Compute: Innovation
-            var innov = numeric.sub( z, z_hat ); 
-            // Wrap
-            innov[1] = this.math.angleWrap( innov[1] );
-        
-            // Compute: Covariance Innovation
-            var S = numeric.dot( numeric.dot( jacobian, this.estimator.P ), numeric.transpose( jacobian ) );
-            
-            // Compute: Kalman Gain
-            var W = numeric.dot( numeric.dot( this.estimator.P, jacobian ), numeric.inv( S ) );
-
-            // Compute update in Joseph form
-            var I = numeric.identity(3);
-            var P = numeric.dot( numeric.dot( numeric.sub( I, numeric.dot( W, jacobian) ), this.estimator.P  ), 
-                                numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) );
-
-            P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
-          
-            //this.estimator.state = 
-
-            var tmp = numeric.add( [this.estimator.state.x, this.estimator.state.y, this.estimator.state.theta], numeric.dot( W, innov ) );
-
-            //console.log( numeric.prettyPrint( tmp ) );
-
-            this.estimator.state.x = tmp[0];
-            this.estimator.state.y = tmp[1];
-            this.estimator.state.theta = this.math.angleWrap( tmp[2] );
-
-            console.log( this.estimator.state );
-
             // Estimate
-            this.estimator.update();
+            this.estimator.predict();
 
+            //Measurement available?
+            if (this.measurement_available)
+            { 
+                // Do: measurement
+                var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+           
+                this.estimator.update( random_landmark );
+            }
+            else
+            {
+
+            }
+            
             last_update_time = Date.now();
         }
 

@@ -4,10 +4,9 @@ IAB.Estimators = {
 
     EKF: function( start_state, P, Q, control_action, model, landmarks, args )
     {
-        if ( !(start_state instanceof IAB.Robotics.SE2 ))
-        {
-            throw "Require: IAB.Robotics.SE2 ";
-        }
+        if ( !(start_state instanceof IAB.Robotics.SE2 )){throw "Require: IAB.Robotics.SE2 ";}
+
+        console.log( args.scene );
 
         this.update_frequency = args.update_frequency || 10; // Hz
 
@@ -30,7 +29,7 @@ IAB.Estimators = {
         // Observation model
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
-        // PREDICTION STEP
+        // PREDICTION 
         this.predict = function()
         {
             var dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency);
@@ -62,7 +61,13 @@ IAB.Estimators = {
 
         }
 
-        // UPDATE STEP
+        this.debug = true;
+
+        this.landmark_line = IAB.Primitives.Line();
+
+        args.scene.add( this.landmark_line );
+
+        // UPDATE 
         this.update = function( landmark )
         {
             // Do: prediction
@@ -71,18 +76,19 @@ IAB.Estimators = {
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
+            var z = this.observation_model.update( this.state, landmark );
+           
+            this.landmark_line.geometry.vertices[0].x = this.state.x;
+            this.landmark_line.geometry.vertices[0].z = this.state.y;
+            this.landmark_line.geometry.vertices[1].copy( landmark.position );
+            
+            this.landmark_line.geometry.verticesNeedUpdate = true;
+
             // Compute: Innovation
             var innov = numeric.sub( z, z_hat ); 
+           
             // Wrap
             innov[1] = this.math.angleWrap( innov[1] );
-
-            //this.estimator.state.x = tmp[0];
-            //this.estimator.state.y = tmp[1];
-            //this.estimator.state.theta = this.math.angleWrap( tmp[2] );
-
-            //this.estimator.state.x = 0;
-            //this.estimator.state.y = 0;
-            //this.estimator.state.theta = 0;
 
             // Compute: Covariance Innovation
             var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) );
@@ -98,11 +104,7 @@ IAB.Estimators = {
             P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
 
             var tmp = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
-
-            var z = this.observation_model.update( this.state, landmark );
-
-        
-            console.log( this.state );
+            //console.log( tmp );
 
         }
     }

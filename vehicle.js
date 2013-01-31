@@ -77,7 +77,8 @@ IAB.Vehicle =  {
         this.measurement_available = true;
 
         this.math = new IAB.Tools.Math();
-        
+       
+        var counter = 0;
         this.update = function()
         {
             // Get the position
@@ -96,17 +97,25 @@ IAB.Vehicle =  {
             this.mesh.position.x = this.state.x;
             this.mesh.position.z = this.state.y;
 
-            // Estimate
+            // Predict
             this.estimator.predict();
 
             //Measurement available?
             if (this.measurement_available)
             { 
-                console.log( 'hi' );
-                // Do: measurement
-                var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-           
-                //this.estimator.update( random_landmark );
+                counter++;
+                if ( counter < 20 || counter > 200)
+                {
+
+                    // Observe landmark
+                    var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    // Update
+                    this.estimator.update( random_landmark );
+
+                }else
+                {
+                    console.log( 'no meas' );
+                }
             }
             else
             {

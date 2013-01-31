@@ -104,6 +104,13 @@ IAB.Estimators = {
             var tmp = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
             //console.log( tmp );
 
+            this.P = P;
+
+            //console.log( numeric.prettyPrint( P )  );
+
+            this.state.x = tmp[0];
+            this.state.y = tmp[1];
+            this.state.theta = tmp[2];
         }
     }
 };

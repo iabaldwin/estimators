@@ -8,6 +8,11 @@ IAB.Robotics = {
         this.y = y || 0;
         this.theta = theta || 0;
 
+        this.set = function( a,b,c )
+        {
+            this.x = a; this.y = b; this.theta = c;
+        } 
+
         this.toVector = function()
         {
             return new THREE.Vector3( this.x, 0, this.y );

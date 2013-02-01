@@ -29,6 +29,7 @@ IAB.Observations =
                 scene.add(line);
 
                 this.lines.push( line );
+            
             }
         }
 

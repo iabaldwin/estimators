@@ -73,6 +73,9 @@ IAB.Vehicle =  {
         this.math = new IAB.Tools.Math();
        
         var counter = 0;
+      
+        this.observation_model = new IAB.Observations.RangingModel( landmarks );
+
         this.update = function()
         {
             var dt = (Date.now() - last_update_time)/1000;
@@ -94,25 +97,25 @@ IAB.Vehicle =  {
             this.estimator.predict( dt );
 
             //Measurement available?
-            //if (this.measurement_available)
-            //{ 
-                //counter++;
-                //if ( counter < 20 || counter > 200)
-                //{
-                    //// Observe landmark
-                    //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-                    //// Update
-                    //this.estimator.update( random_landmark, dt );
+            if (this.measurement_available)
+            { 
+                counter++;
+                if ( counter < 20 || counter > 200)
+                {
+                    // Observe landmark
+                    var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    // Update
+                    this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
 
-                //}else
-                //{
-                    //// Measurement failure
-                //}
-            //}
-            //else
-            //{
+                }else
+                {
+                    // Measurement failure
+                }
+            }
+            else
+            {
 
-            //}
+            }
             
             last_update_time = Date.now();
         }

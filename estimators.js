@@ -43,13 +43,14 @@ IAB.Estimators = {
                 [dt*Math.tan(this.control_action.u)/this.model.L, dt*this.control_action.v*Math.pow(this.math.sec(this.control_action.u),2)]];
 
             // Inject process noise
-            var action = new IAB.Controllers.ControlInput();
-            action.copy( this.control_action );
-            action.u +=Math.random()/100;
-            action.v +=Math.random()/100;
+            var control_action = new IAB.Controllers.ControlInput();
+            control_action.copy( this.control_action );
+            control_action.u +=Math.random()/100;
+            control_action.v +=Math.random()/100;
 
             // Update estimate
-            this.state = model.predict( this.state, this.control_action, dt );
+            //this.state = model.predict( this.state, this.control_action, dt );
+            this.state = model.predict( this.state, control_action, dt );
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
@@ -63,7 +64,8 @@ IAB.Estimators = {
         args.scene.add( this.landmark_line );
 
         // UPDATE 
-        this.update = function( landmark, dt )
+        // Need to pass in *ACTUAL* position in landmark observation
+        this.update = function( landmark, z )
         {
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
@@ -71,7 +73,7 @@ IAB.Estimators = {
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
-            var z = this.observation_model.update( this.state, landmark );
+            //var z = this.observation_model.update( this.state, landmark );
            
             this.landmark_line.geometry.vertices[0].x = this.state.x;
             this.landmark_line.geometry.vertices[0].z = this.state.y;
@@ -85,8 +87,11 @@ IAB.Estimators = {
             // Wrap
             innov[1] = this.math.angleWrap( innov[1] );
 
+            var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
+
             // Compute: Covariance Innovation
-            var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) );
+            var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) ) ;
+            S = numeric.add( S, REst );
 
             // Compute: Kalman Gain
             var W = numeric.dot( numeric.dot( this.P, numeric.transpose(jacobian) ), numeric.inv( S ) );
@@ -105,6 +110,8 @@ IAB.Estimators = {
             this.state.x = state[0];
             this.state.y = state[1];
             this.state.theta = state[2];
+
+            //console.log( numeric.prettyPrint( this.P ) );
 
             this.updateGraphics();
         }

@@ -6,7 +6,8 @@ postInit = function()
     var landmarks = new IAB.Landmark.GenerateRandom( scene, 20 );
 
     // Controller type
-    var controller = new IAB.Controllers.Constant(.2, 2);
+    //var controller = new IAB.Controllers.Constant(.2, 2);
+    var controller = new IAB.Controllers.Constant(.05, 12);
         
     // Controller input
     var control_input = new IAB.Controllers.ControlInput();

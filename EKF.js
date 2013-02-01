@@ -1,7 +1,5 @@
-//var landmarks, control_input, controller, model, estimator, LIDAR, observation_model
 postInit = function()
 {
-
     // Environment
     var landmarks = new IAB.Landmark.GenerateRandom( scene, 20 );
 

@@ -12,7 +12,7 @@ IAB.Estimators = {
         this.control_action = control_action;
         this.model = model;
         
-        // Copy arrays and start state : the filter retains its own estimate of hte state
+        // Copy arrays and start state : the filter retains its own estimate of the state
         this.state = new IAB.Robotics.SE2();
         this.state.copy( start_state );
         this.P = P.slice(0);
@@ -25,13 +25,14 @@ IAB.Estimators = {
         this.math = new IAB.Tools.Math();
 
         // Observation model
-        this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
+        if ( landmarks )
+        {
+            this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
+        }
 
         // PREDICTION 
-        this.predict = function()
+        this.predict = function( dt )
         {
-            var dt = (Date.now() -  this.last_update_time )/1000 || (1.0/this.update_frequency);
-
             //Compute Jacobians
             var JacFx = [[1,0,-dt*this.control_action.v*Math.sin( this.state.theta)],
                 [0,1,dt*this.control_action.v*Math.cos(this.state.theta)],
@@ -52,13 +53,9 @@ IAB.Estimators = {
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
-
-            
-            // Log time
-            this.last_update_time = Date.now();
-
-            this.uncertainty_ellipse.update( this.state, this.P, .5);
-            //this.updateGraphics();
+           
+            // Draw uncertainty
+            this.updateGraphics();
         }
 
         this.landmark_line = IAB.Primitives.Line();
@@ -66,7 +63,7 @@ IAB.Estimators = {
         args.scene.add( this.landmark_line );
 
         // UPDATE 
-        this.update = function( landmark )
+        this.update = function( landmark, dt )
         {
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
@@ -108,17 +105,14 @@ IAB.Estimators = {
             this.state.x = state[0];
             this.state.y = state[1];
             this.state.theta = state[2];
-           
-            //this.updateGraphics();
-            this.uncertainty_ellipse.update( this.state, this.P, .5);
 
+            this.updateGraphics();
         }
 
         this.updateGraphics = function()
         {
             // Update graphics
-            //this.uncertainty_ellipse.update( this.state, this.P, .5);
-            //this.uncertainty_ellipse.update( this.state, this.P, .5);
+            this.uncertainty_ellipse.update( this.state, this.P, .5);
         }
 
 

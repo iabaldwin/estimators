@@ -75,45 +75,44 @@ IAB.Vehicle =  {
         var counter = 0;
         this.update = function()
         {
-            // Get the position
-            var position = this.getPosition(); 
-            this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+            var dt = (Date.now() - last_update_time)/1000;
 
             // Update the control action
-            this.control_input.copy(  this.controller.update() );
-        
-            var dt = (Date.now() - last_update_time)/1000;
+            this.control_input.copy(  this.controller.update( dt ) );
 
             // Get the new state
             this.state = this.model.predict( this.state, this.control_input, dt );
-           
-            // Update the mesh, take care wrt. coordinate-systems
-            this.mesh.position.x = this.state.x;
-            this.mesh.position.z = this.state.y;
+
+            // Get the position
+            var position = this.state.toVector();
+            this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+
+            // Update the mesh
+            this.mesh.position.copy( this.state.toVector() );
 
             // Predict
-            this.estimator.predict();
+            this.estimator.predict( dt );
 
             //Measurement available?
-            if (this.measurement_available)
-            { 
-                counter++;
-                if ( counter < 20 || counter > 200)
-                {
-                    // Observe landmark
-                    var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-                    // Update
-                    this.estimator.update( random_landmark );
+            //if (this.measurement_available)
+            //{ 
+                //counter++;
+                //if ( counter < 20 || counter > 200)
+                //{
+                    //// Observe landmark
+                    //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    //// Update
+                    //this.estimator.update( random_landmark, dt );
 
-                }else
-                {
-                    // Measurement failure
-                }
-            }
-            else
-            {
+                //}else
+                //{
+                    //// Measurement failure
+                //}
+            //}
+            //else
+            //{
 
-            }
+            //}
             
             last_update_time = Date.now();
         }

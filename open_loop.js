@@ -1,7 +1,7 @@
 postInit = function()
 {
     // Controller type
-    var controller = new IAB.Controllers.Constant(.02, 10);
+    var controller = new IAB.Controllers.Constant(.05, 12);
         
     // Controller input
     var control_input = new IAB.Controllers.ControlInput();
@@ -20,7 +20,7 @@ postInit = function()
     var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
 
     // Estimator type
-    var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, {scene:scene, update_frequency:20 });
+    var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
 
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, []);

@@ -7,7 +7,12 @@ IAB.Robotics = {
         this.x = x || 0;
         this.y = y || 0;
         this.theta = theta || 0;
-   
+
+        this.toVector = function()
+        {
+            return new THREE.Vector3( this.x, 0, this.y );
+        }
+
         this.copy = function( s )
         {
             this.x = s.x;

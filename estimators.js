@@ -49,8 +49,8 @@ IAB.Estimators = {
             control_action.v +=Math.random()/100;
 
             // Update estimate
-            //this.state = model.predict( this.state, this.control_action, dt );
-            this.state = model.predict( this.state, control_action, dt );
+            this.state = model.predict( this.state, this.control_action, dt );
+            //this.state = model.predict( this.state, control_action, dt );
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );

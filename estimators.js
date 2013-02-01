@@ -57,7 +57,8 @@ IAB.Estimators = {
             // Log time
             this.last_update_time = Date.now();
 
-            this.updateGraphics();
+            this.uncertainty_ellipse.update( this.state, this.P, .5);
+            //this.updateGraphics();
         }
 
         this.landmark_line = IAB.Primitives.Line();
@@ -108,14 +109,16 @@ IAB.Estimators = {
             this.state.y = state[1];
             this.state.theta = state[2];
            
-            this.updateGraphics();
+            //this.updateGraphics();
+            this.uncertainty_ellipse.update( this.state, this.P, .5);
 
         }
 
         this.updateGraphics = function()
         {
             // Update graphics
-            this.uncertainty_ellipse.update( this.state, this.P, .5);
+            //this.uncertainty_ellipse.update( this.state, this.P, .5);
+            //this.uncertainty_ellipse.update( this.state, this.P, .5);
         }
 
 

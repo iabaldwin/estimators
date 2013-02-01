@@ -40,13 +40,15 @@ IAB.Estimators = {
             var JacFu = [[dt*Math.cos( this.state.theta), 0],
                 [dt*Math.sin( this.state.theta), 0],
                 [dt*Math.tan(this.control_action.u)/this.model.L, dt*this.control_action.v*Math.pow(this.math.sec(this.control_action.u),2)]];
-           
+
+            // Inject process noise
+            var action = new IAB.Controllers.ControlInput();
+            action.copy( this.control_action );
+            action.u +=Math.random()/100;
+            action.v +=Math.random()/100;
+
             // Update estimate
             this.state = model.predict( this.state, this.control_action, dt );
-
-            //this.state.x += Math.random()/100;
-            //this.state.y += Math.random()/100;
-            //this.state.theta += Math.random()/100;
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
@@ -58,8 +60,6 @@ IAB.Estimators = {
             this.last_update_time = Date.now();
 
         }
-
-        this.debug = true;
 
         this.landmark_line = IAB.Primitives.Line();
 

@@ -100,7 +100,6 @@ IAB.Vehicle =  {
                 counter++;
                 if ( counter < 20 || counter > 200)
                 {
-
                     // Observe landmark
                     var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
                     // Update
@@ -117,6 +116,11 @@ IAB.Vehicle =  {
             }
             
             last_update_time = Date.now();
+        }
+
+        this.toggleMeasurements = function()
+        {
+            this.measurement_available = !this.measurement_available; 
         }
 
         this.tweenUpdate = function(obj,b)

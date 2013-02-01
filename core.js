@@ -20,6 +20,12 @@ function run()
     animate();
 }
 
+/*
+ *Initialisation
+ *  1. Create scene
+ *  2. Create camera 
+ */
+
 function init() {
 
     container = document.createElement( 'div' );
@@ -29,27 +35,20 @@ function init() {
     scene = new THREE.Scene();
 
     // Camera
-    //camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
-    //camera = new THREE.CombinedCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
-    //camera = new THREE.PerspectiveCamera( window.innerWidth, window.innerHeight, 45, 1, 10000, -2000, 10000 );
-   
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-   
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
-   
     camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR); 
-
     camera.position = new THREE.Vector3(100,100,100);
-    //camera.position = new THREE.Vector3(0,130,0);
-    //camera.position = new THREE.Vector3(0,100,0);
 
     camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
     // Controls
-    //controls = new THREE.TrackballControls( camera );
+    controls = new THREE.TrackballControls( camera );
     //controls = new THREE.RollControls( camera );
     //controls.movementSpeed = 1;
     //controls.lookSpeed = .003;
+
+    scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
 
     // Projection estimation
     projector = new THREE.Projector();
@@ -92,9 +91,6 @@ function onDocumentMouseMove( event ) {
 
     event.preventDefault();
 
-    //mouse2D.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    //mouse2D.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
 }
 
 function onDocumentMouseDown( event ) {
@@ -120,10 +116,14 @@ function animate() {
 
     // Three
     requestAnimationFrame( animate );
-    
-    // 
+  
+    // Controls
+    controls.update();
+
+    // Render
     renderer.render( scene, camera );
-    
+
+    // Hook
     postRender();
     
     stats.update();

@@ -17,12 +17,6 @@ IAB.Vehicle =  {
 
         // Sensors
         this.sensors = [];
-        
-        //this.sensors.push( new IAB.Sensors.Ranging(scene, landmarks, 100) );
-        //this.sensors.push( new IAB.Sensors.FixedRanging(scene, landmarks ) );
-        //this.sensors.push( new IAB.Sensors.Odometry() );
-        //this.sensors.push( new IAB.Sensors.Velocity( 50 ) );
-     
         this.addSensor = function( sensor )
         {
             this.sensors.push( sensor );
@@ -114,7 +108,7 @@ IAB.Vehicle =  {
 
                 }else
                 {
-                    console.log( 'no meas' );
+                    // Measurement failure
                 }
             }
             else

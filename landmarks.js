@@ -30,7 +30,7 @@ IAB.Landmark =  {
         for ( var i = 0; i<num_landmarks; i++ )
         {
             // Randomise position
-            var landmark_location = new THREE.Vector3( Math.random()*upper_limit - (upper_limit/2), Math.random()*upper_limit - (upper_limit/2));
+            var landmark_location = new THREE.Vector3( Math.random()*upper_limit - (upper_limit/2), 0, Math.random()*upper_limit - (upper_limit/2));
 
             // Create landmark
             var landmark = new IAB.Landmark.Point(landmark_location); 

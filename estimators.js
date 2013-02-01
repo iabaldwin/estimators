@@ -53,12 +53,11 @@ IAB.Estimators = {
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
 
-            // Update graphics
-            this.uncertainty_ellipse.update( this.state, this.P, .5);
-           
+            
             // Log time
             this.last_update_time = Date.now();
 
+            this.updateGraphics();
         }
 
         this.landmark_line = IAB.Primitives.Line();
@@ -100,17 +99,25 @@ IAB.Estimators = {
                     numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) );
 
             P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
-
-            var tmp = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
-            //console.log( tmp );
-
             this.P = P;
 
-            //console.log( numeric.prettyPrint( P )  );
+            // Compute new state
+            var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
 
-            this.state.x = tmp[0];
-            this.state.y = tmp[1];
-            this.state.theta = tmp[2];
+            this.state.x = state[0];
+            this.state.y = state[1];
+            this.state.theta = state[2];
+           
+            this.updateGraphics();
+
         }
+
+        this.updateGraphics = function()
+        {
+            // Update graphics
+            this.uncertainty_ellipse.update( this.state, this.P, .5);
+        }
+
+
     }
 };

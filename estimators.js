@@ -23,9 +23,6 @@ IAB.Estimators = {
         // Rendering
         this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
 
-        // Tools
-        this.math = new IAB.Tools.Math();
-
         // Observation model
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
@@ -39,7 +36,7 @@ IAB.Estimators = {
 
             var JacFu = [[dt*Math.cos( this.state.theta), 0],
                 [dt*Math.sin( this.state.theta), 0],
-                [dt*Math.tan(this.control_action.u)/this.model.L, dt*this.control_action.v*Math.pow(this.math.sec(this.control_action.u),2)]];
+                [dt*Math.tan(this.control_action.u)/this.model.L, dt*this.control_action.v*Math.pow(IAB.Estimators.math.sec(this.control_action.u),2)]];
 
             // Inject process noise
             var control_action = new IAB.Controllers.ControlInput();

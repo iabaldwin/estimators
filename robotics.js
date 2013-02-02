@@ -55,4 +55,9 @@ IAB.Robotics = {
             return new IAB.Robotics.SE2( result[0], result[1], angle );
         }
     }
+};
+
+IAB.Robotics.SE2.prototype.toString = function()
+{
+    return 'hi';
 }

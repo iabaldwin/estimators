@@ -107,10 +107,11 @@ IAB.Vehicle =  {
             if (this.measurement_available)
             { 
                 counter++;
-                if ( counter < 20 || counter > 200)
+                if ( counter < 5 || counter > 20 )
                 {
                     // Observe landmark
                     var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    
                     // Update
                     this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
 

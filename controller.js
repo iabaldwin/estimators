@@ -31,17 +31,10 @@ IAB.Controllers = {
 
     Constant: function( angular_velocity, linear_velocity )
     {
-        var counter = 0;
         this.update = function()
         {
             var control = new IAB.Controllers.ControlInput( angular_velocity, linear_velocity );  
           
-            //if (counter++ > 100)
-            //{
-                //control.u *= -1; 
-            //}
-
-
             return control;
         }
     },
@@ -58,6 +51,11 @@ IAB.Controllers = {
 
             return new IAB.Controllers.ControlInput( rotational_velocityg, linear_velocity );  
         }
+
+    },
+
+    Debug: function( k )
+    {
 
     },
 

@@ -139,3 +139,7 @@ function animate() {
 
 }
 
+function doStep()
+{
+    step = true;
+}

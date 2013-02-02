@@ -42,6 +42,31 @@ IAB.Landmark =  {
         }
 
         return landmarks;
-    }
+    }, 
 
+
+    Grid: function(scene )
+    {
+        var landmarks = [];
+
+        // Create landmark
+        var landmark = new IAB.Landmark.Point(new THREE.Vector3( -50, 0, -50 )); 
+        landmarks.push( landmark );
+
+        landmark = new IAB.Landmark.Point(new THREE.Vector3( -50, 0, 50 )); 
+        landmarks.push( landmark );
+
+        landmark = new IAB.Landmark.Point(new THREE.Vector3( 50, 0, -50 )); 
+        landmarks.push( landmark );
+
+        landmark = new IAB.Landmark.Point(new THREE.Vector3( 50, 0, 50 )); 
+        landmarks.push( landmark );
+
+        // Add it to the scene
+        //scene.add( landmark.mesh );
+
+        landmarks.forEach( function(landmark){ scene.add( landmark.mesh ); } );
+
+        return landmarks;
+    }
 };

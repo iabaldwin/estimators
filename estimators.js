@@ -64,6 +64,9 @@ IAB.Estimators = {
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
+            console.log( numeric.prettyPrint( z_hat ) );
+            console.log( numeric.prettyPrint( z ) );
+
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
@@ -95,6 +98,7 @@ IAB.Estimators = {
             this.P = P;
 
             // Compute new state
+            console.log( numeric.prettyPrint( numeric.dot( W, innov ) ) ); 
             var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
 
             this.state.x = state[0];

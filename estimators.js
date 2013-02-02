@@ -45,7 +45,6 @@ IAB.Estimators = {
             control_action.v += IAB.Estimators.math.nrand()/100;
 
             // Update estimate
-            //this.state = model.predict( this.state, this.control_action, dt );
             this.state = model.predict( this.state, control_action, dt );
 
             // Inflate covariance matrix
@@ -56,11 +55,9 @@ IAB.Estimators = {
         }
 
         this.landmark_line = IAB.Primitives.Line();
-
         args.scene.add( this.landmark_line );
 
         // UPDATE 
-        // Need to pass in *ACTUAL* position in landmark observation
         var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
         this.update = function( landmark, z )
         {
@@ -77,9 +74,9 @@ IAB.Estimators = {
 
             // Compute: Innovation
             var innov = numeric.sub( z, z_hat ); 
-           
+          
             // Wrap
-            innov[2] = IAB.Estimators.math.angleWrap( innov[2] );
+            innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
 
             // Compute: Covariance Innovation
             var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) ) ;

@@ -43,8 +43,6 @@ postInit = function()
 
 postRender = function()
 {
-    TWEEN.update();
-
     // Run estimation in an open-loop fashion
     vehicle.update();
 }

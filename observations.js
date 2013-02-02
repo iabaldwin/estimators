@@ -33,39 +33,17 @@ IAB.Observations =
             }
         }
 
+        var tmp = new THREE.Vector3(), loc;
         this.update = function( state, landmark )
         {
-            var tmp = new THREE.Vector3(), loc;
+            // Subtract out the map
+            loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmark );
 
-            //var observations = [];
+            var range = loc.length();
 
-            //for( var i=0; i<landmarks.length; i++ )
-            //{
-                // Subtract out the map
-                loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmark );
+            var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - state.theta );
 
-                var range = loc.length();
-
-                var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - state.theta );
-                //var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.y, loc.x )  - state.theta );
-
-                //var observations = {range:range, angle:angle};
-
-                var observations = [range,angle];
-
-                //if (this.debug)
-                //{
-                    //var line = this.lines[landmark_id];
-
-                    ////line.geometry.vertices[0].copy( state );
-                    //line.geometry.vertices[0].x = state.x;
-                    //line.geometry.vertices[0].z = state.y;
-
-                    //line.geometry.vertices[1].copy( landmarks[landmark_id].position );
-
-                    //line.geometry.verticesNeedUpdate = true;
-                //}
-            //}
+            var observations = [range,angle];
 
             return observations;
         }
@@ -78,13 +56,12 @@ IAB.Observations =
         var loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmark );
 
         var range = loc.length(); 
-
         var rangeSq = loc.lengthSq();
 
         var jacobian = [[0,0,0],[0,0,0]];
 
         jacobian[0][0] = -1*loc.x / range;
-        jacobian[0][1] = loc.z / range;
+        jacobian[0][1] = -1*loc.z / range;
         jacobian[1][0] = loc.z / rangeSq;
         jacobian[1][1] = -1*loc.x / rangeSq;
         jacobian[1][2] = -1;

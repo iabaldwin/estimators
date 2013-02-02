@@ -11,6 +11,8 @@ var landmarks;
 var postInit = function(){ throw "Must be overridden"; }; // Override me
 var postRender = function(){ throw "Must be overridden";}; // Override me
 
+var step = false;
+
 function run()
 {
     // Initialisaiton routines
@@ -99,9 +101,16 @@ function onDocumentMouseDown( event ) {
 
 }
 
+document.addEventListener( 'keypress', onDocumentKeyDown, false );
 function onDocumentKeyDown( event ) {
 
     switch( event.keyCode ) {
+
+        case 32:
+            step = true;
+
+        default:
+            break;
     }
 
 }
@@ -119,13 +128,13 @@ function animate() {
   
     // Controls
     controls.update();
-
-    // Render
-    renderer.render( scene, camera );
-
+    
     // Hook
     postRender();
     
+    // Render
+    renderer.render( scene, camera );
+
     stats.update();
 
 }

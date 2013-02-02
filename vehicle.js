@@ -78,17 +78,24 @@ IAB.Vehicle =  {
 
         this.update = function()
         {
-            var dt = (Date.now() - last_update_time)/1000;
+            if (!step)
+                return;
+
+            //Toggle
+            step = false;
+
+            //var dt = (Date.now() - last_update_time)/1000;
+            var dt = .1;
 
             // Update the control action
             this.control_input.copy(  this.controller.update( dt ) );
 
-            // Get the new state
+            // Get the *actual* new state
             this.state = this.model.predict( this.state, this.control_input, dt );
 
             // Get the position
-            var position = this.state.toVector();
-            this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+            //var position = this.state.toVector();
+            //this.sensors.forEach( function(sensor){ sensor.update( position ); } );
 
             // Update the mesh
             this.mesh.position.copy( this.state.toVector() );
@@ -107,7 +114,7 @@ IAB.Vehicle =  {
                     // Update
                     this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
 
-                }else
+                } else
                 {
                     // Measurement failure
                 }

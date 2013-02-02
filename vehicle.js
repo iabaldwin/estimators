@@ -78,14 +78,13 @@ IAB.Vehicle =  {
 
         this.update = function()
         {
-            if (!step)
-                return;
-
+            //if (!step)
+                //return;
             //Toggle
-            step = false;
+            //step = false;
 
             //var dt = (Date.now() - last_update_time)/1000;
-            var dt = .1;
+            var dt = .01;
 
             // Update the control action
             this.control_input.copy(  this.controller.update( dt ) );

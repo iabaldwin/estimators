@@ -6,7 +6,8 @@ postInit = function()
 
     // Controller type
     //var controller = new IAB.Controllers.Constant(.2, 2);
-    var controller = new IAB.Controllers.Constant(.05, 12);
+    //var controller = new IAB.Controllers.Constant(.05, 12);
+    var controller = new IAB.Controllers.Constant(.2, 1);
         
     // Controller input
     var control_input = new IAB.Controllers.ControlInput();
@@ -44,6 +45,5 @@ postInit = function()
 
 postRender = function()
 {
-    // Run estimation in an open-loop fashion
     vehicle.update();
 }

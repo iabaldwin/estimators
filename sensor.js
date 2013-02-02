@@ -1,4 +1,4 @@
-var IAB = window.IAB || {};
+//var IAB = window.IAB || {};
 
 var Red   = new THREE.Color( 0xff0000 );
 var Green = new THREE.Color( 0x00ff00 );

@@ -47,6 +47,7 @@ IAB.Observations =
                 var range = loc.length();
 
                 var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.x, loc.y )  - state.theta );
+                //var angle = IAB.Observations.math.angleWrap( Math.atan2( loc.y, loc.x )  - state.theta );
 
                 //var observations = {range:range, angle:angle};
 

@@ -1,15 +1,5 @@
 var IAB = window.IAB || {};
 
-var writeable = true;
-function WriteData( data )
-{
-    if (writeable)
-    {
-        writeConsole( data );
-        writeable = false;
-    }
-}
-
 IAB.Vehicle =  {
 
     Holonomic: function( scene, landmarks )

@@ -21,7 +21,7 @@ IAB.Estimators = {
         this.Q = Q.slice(0);
 
         // Rendering
-        this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
+        this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, 5, args);
 
         // Observation model
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
@@ -46,7 +46,6 @@ IAB.Estimators = {
 
             // Update estimate
             this.state = model.predict( this.state, control_action, dt );
-            //this.state.copy( model.predict( this.state, this.control_action, dt ) );
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
@@ -119,7 +118,7 @@ IAB.Estimators = {
         this.updateGraphics = function()
         {
             // Update graphics
-            this.uncertainty_ellipse.update( this.state, this.P, .5);
+            this.uncertainty_ellipse.update( this.state, this.P, 8);
         }
     }
 };

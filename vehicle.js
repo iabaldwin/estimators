@@ -82,7 +82,7 @@ IAB.Vehicle =  {
 
         this.math = new IAB.Tools.Math();
        
-        var counter = 400;
+        var counter = 0;
       
         this.observation_model = new IAB.Observations.RangingModel( landmarks );
 
@@ -97,11 +97,11 @@ IAB.Vehicle =  {
             //Toggle
             //step = false;
 
-            if( !counter--)
-            {
+            //if( !counter--)
+            //{
                 //WriteData( this.poses );
-                return;
-            }
+                //return;
+            //}
             //var dt = (Date.now() - last_update_time)/1000;
             var dt = .1;
 
@@ -124,14 +124,14 @@ IAB.Vehicle =  {
             this.poses.push( this.state );
 
             //Measurement available?
-            //if (this.measurement_available)
-            //{ 
-                //counter++;
-                //if ( counter < 5 || counter > 20 )
-                //{
-                    //// Observe landmark
-                    //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-                    var random_landmark = landmarks[landmark];
+            if (this.measurement_available)
+            { 
+                counter++;
+                if ( counter < 100 || counter > 500 )
+                {
+                    // Observe landmark
+                    var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    //var random_landmark = landmarks[landmark];
                     
                     // Update
                     this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
@@ -142,15 +142,11 @@ IAB.Vehicle =  {
                         landmark = 0;
                     }
 
-                //} else
-                //{
-                    //// Measurement failure
-                //}
-            //}
-            //else
-            //{
-
-            //}
+                } else
+                {
+                    // Measurement failure
+                }
+            }
             
             last_update_time = Date.now();
         }

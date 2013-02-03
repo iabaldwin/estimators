@@ -1,5 +1,15 @@
 var IAB = window.IAB || {};
 
+var writeable = true;
+function WriteData( data )
+{
+    if (writeable)
+    {
+        writeConsole( data );
+        writeable = false;
+    }
+}
+
 IAB.Vehicle =  {
 
     Holonomic: function( scene, landmarks )
@@ -72,10 +82,13 @@ IAB.Vehicle =  {
 
         this.math = new IAB.Tools.Math();
        
-        var counter = 0;
+        var counter = 400;
       
         this.observation_model = new IAB.Observations.RangingModel( landmarks );
 
+        this.poses = [];
+
+        var landmark = 0;
 
         this.update = function()
         {
@@ -84,11 +97,13 @@ IAB.Vehicle =  {
             //Toggle
             //step = false;
 
-            if( counter++ > 6000 )
+            if( !counter--)
+            {
+                //WriteData( this.poses );
                 return;
-
+            }
             //var dt = (Date.now() - last_update_time)/1000;
-            var dt = .01;
+            var dt = .1;
 
             // Update the control action
             this.control_input.copy(  this.controller.update( dt ) );
@@ -106,7 +121,7 @@ IAB.Vehicle =  {
             // Predict
             this.estimator.predict( dt );
 
-            console.log( this.state );
+            this.poses.push( this.state );
 
             //Measurement available?
             //if (this.measurement_available)
@@ -116,9 +131,16 @@ IAB.Vehicle =  {
                 //{
                     //// Observe landmark
                     //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+                    var random_landmark = landmarks[landmark];
                     
-                    //// Update
-                    ////this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
+                    // Update
+                    this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
+                    
+                    landmark++;
+                    if ( landmark >= landmarks.length )
+                    {
+                        landmark = 0;
+                    }
 
                 //} else
                 //{

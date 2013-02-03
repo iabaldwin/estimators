@@ -5,6 +5,8 @@ var IAB = window.IAB || {};
 
 IAB.Models = {
 
+    math: new IAB.Tools.Math(),
+
     // Model of steering
     Ackermann:  function( L )
     {
@@ -17,8 +19,8 @@ IAB.Models = {
 
             new_state.x     = state.x + dt*control.v*Math.cos( state.theta );
             new_state.y     = state.y + dt*control.v*Math.sin( state.theta );
-            new_state.theta = state.theta + dt*control.v/this.L*Math.tan( control.u );
-       
+            new_state.theta = IAB.Models.math.angleWrap(state.theta + dt*control.v/this.L*Math.tan( control.u ) );
+
             return new_state;
         }
     },
@@ -27,14 +29,6 @@ IAB.Models = {
     {
         this.predict = function( state, control ) 
         {
-            // Update state
-            var new_state = new IAB.Robotics.SE2();
-
-            new_state.x     = state.x + dt*control.v*Math.cos( state.theta );
-            new_state.y     = state.y + dt*control.v*Math.sin( state.theta );
-            new_state.theta = state.theta  + dt*control.v/this.L*Math.tan( control.u );
-       
-            return new_state;
         }
     }
 

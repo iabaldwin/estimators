@@ -59,5 +59,5 @@ IAB.Robotics = {
 
 IAB.Robotics.SE2.prototype.toString = function()
 {
-    return 'hi';
+    return this.x.toFixed(4) + ' ' + this.y.toFixed(4) +' ' + this.theta.toFixed(4);
 }

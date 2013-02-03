@@ -46,6 +46,7 @@ IAB.Estimators = {
 
             // Update estimate
             this.state = model.predict( this.state, control_action, dt );
+            //this.state.copy( model.predict( this.state, this.control_action, dt ) );
 
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
@@ -59,14 +60,20 @@ IAB.Estimators = {
 
         // UPDATE 
         var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
+       
+        var counter = 0;
+
+        this.innovs = [];
+
         this.update = function( landmark, z )
         {
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
-            //console.log( numeric.prettyPrint( z_hat ) );
-            //console.log( numeric.prettyPrint( z ) );
-
+            if (counter++===200)
+            {
+                WriteData( this.innovs );
+            }
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
@@ -80,6 +87,8 @@ IAB.Estimators = {
           
             // Wrap
             innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
+
+            this.innovs.push( innov );
 
             // Compute: Covariance Innovation
             var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) ) ;
@@ -98,7 +107,6 @@ IAB.Estimators = {
             this.P = P;
 
             // Compute new state
-            console.log( numeric.prettyPrint( numeric.dot( W, innov ) ) ); 
             var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
 
             this.state.x = state[0];
@@ -113,7 +121,5 @@ IAB.Estimators = {
             // Update graphics
             this.uncertainty_ellipse.update( this.state, this.P, .5);
         }
-
-
     }
 };

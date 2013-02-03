@@ -2,12 +2,9 @@ postInit = function()
 {
     // Environment
     var landmarks = new IAB.Landmark.GenerateRandom( scene, 20 );
-    //var landmarks = new IAB.Landmark.Grid( scene );
 
     // Controller type
-    //var controller = new IAB.Controllers.Constant(.2, 2);
-    //var controller = new IAB.Controllers.Constant(.05, 12);
-    var controller = new IAB.Controllers.Constant(.12, -1);
+    var controller = new IAB.Controllers.Constant(.2, 10);
         
     // Controller input
     var control_input = new IAB.Controllers.ControlInput();

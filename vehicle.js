@@ -25,6 +25,8 @@ IAB.Vehicle =  {
         this.mesh.position = new THREE.Vector3(0,0,0);
         this.mesh.rotation.x += THREE.Math.degToRad( 270 );
 
+        //var loader = new THREE.OBJLoader();
+
         // Sensors
         this.sensors = [];
         this.addSensor = function( sensor )
@@ -80,30 +82,15 @@ IAB.Vehicle =  {
         
         this.measurement_available = true;
 
-        this.math = new IAB.Tools.Math();
-       
         var counter = 0;
       
         this.observation_model = new IAB.Observations.RangingModel( landmarks );
-
-        this.poses = [];
 
         var landmark = 0;
 
         this.update = function()
         {
-            //if (!step)
-                //return;
-            //Toggle
-            //step = false;
-
-            //if( !counter--)
-            //{
-                //WriteData( this.poses );
-                //return;
-            //}
-            //var dt = (Date.now() - last_update_time)/1000;
-            var dt = .1;
+            var dt = (Date.now() - last_update_time)/1000;
 
             // Update the control action
             this.control_input.copy(  this.controller.update( dt ) );
@@ -121,8 +108,6 @@ IAB.Vehicle =  {
             // Predict
             this.estimator.predict( dt );
 
-            this.poses.push( this.state );
-
             //Measurement available?
             if (this.measurement_available)
             { 
@@ -131,21 +116,10 @@ IAB.Vehicle =  {
                 {
                     // Observe landmark
                     var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-                    //var random_landmark = landmarks[landmark];
                     
                     // Update
                     this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
-                    
-                    landmark++;
-                    if ( landmark >= landmarks.length )
-                    {
-                        landmark = 0;
-                    }
-
-                } else
-                {
-                    // Measurement failure
-                }
+                } 
             }
             
             last_update_time = Date.now();

@@ -69,10 +69,10 @@ IAB.Estimators = {
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
-            if (counter++===200)
-            {
-                WriteData( this.innovs );
-            }
+            //if (counter++===200)
+            //{
+                //WriteData( this.innovs );
+            //}
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 

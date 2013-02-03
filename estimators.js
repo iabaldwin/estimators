@@ -21,7 +21,7 @@ IAB.Estimators = {
         this.Q = Q.slice(0);
 
         // Rendering
-        this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, 5, args);
+        this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
 
         // Observation model
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
@@ -108,7 +108,7 @@ IAB.Estimators = {
         this.updateGraphics = function()
         {
             // Update graphics
-            this.uncertainty_ellipse.update( this.state, this.P, 8);
+            this.uncertainty_ellipse.update( this.state, this.P, .5);
         }
     }
 };

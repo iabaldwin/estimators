@@ -54,11 +54,6 @@ IAB.Controllers = {
 
     },
 
-    Debug: function( k )
-    {
-
-    },
-
     /*
      *These controllers assume the model:
      *

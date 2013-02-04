@@ -182,7 +182,7 @@ IAB.Sensors=  {
 
                 if ( visible_landmarks.length > 0 )
                 {
-                    readings.push( visible_landmarks[0] );
+                    readings.push( visible_landmarks[0][0] );
                 }
 
             }

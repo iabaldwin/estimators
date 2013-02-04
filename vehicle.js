@@ -64,11 +64,8 @@ IAB.Vehicle =  {
 
         var counter = 0;
    
-        if (landmarks)
-        {
-            this.observation_model = new IAB.Observations.RangingModel( landmarks );
-        }
-
+        this.observation_model = new IAB.Observations.RangingModel( landmarks );
+        
         this.update = function()
         {
             var dt = (Date.now() - last_update_time)/1000;
@@ -79,10 +76,6 @@ IAB.Vehicle =  {
             // Get the *actual* new state
             this.state = this.model.predict( this.state, this.control_input, dt );
 
-            // Update sensor 
-            var state = this.state;
-            this.sensors.forEach( function(sensor){ sensor.update( state ); } );
-
             // Update the mesh
             this.vehicle_geometry.position.copy( this.state.toVector() );
             // Different co-ord system 
@@ -91,18 +84,29 @@ IAB.Vehicle =  {
             // Predict
             this.estimator.predict( dt );
 
+            // Update 
+            var state = this.state;
+            var readings = this.sensors.map( function(sensor){ return sensor.update( state ); } );
+
             //Measurement available?
-            if (this.measurement_available && landmarks )
+            if (readings[0].length > 0)
             { 
-                counter++;
-                if ( counter < 100 || counter > 500 )
-                {
+                //counter++;
+                //if ( counter < 100 || counter > 500 )
+                //{
                     // Observe landmark
-                    var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-                    
+                    //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+              
+                    var landmark = readings[0][0];
+
+                    console.log( landmark );
+                    console.log( landmark.position );
+
+                    //this.observation_model.update( this.state, landmark );
+
                     // Update
-                    this.estimator.update( random_landmark, this.observation_model.update( this.state, random_landmark ) );
-                } 
+                    //this.estimator.update( landmark, this.observation_model.update( this.state, landmark) );
+                //} 
             }
             
             last_update_time = Date.now();

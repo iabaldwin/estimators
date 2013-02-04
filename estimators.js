@@ -4,9 +4,106 @@ IAB.Estimators = {
 
     math: new IAB.Tools.Math(),
 
-    PF: function( start_state, control_action, model, landmarks, args )
+    PF: function( start_state, num_particles, control_action, model, landmarks, args )
     {
+        this.update_frequency = args.update_frequency || 10; // Hz
 
+        // Associate control action, and state 
+        this.control_action = control_action;
+        this.model = model;
+        
+        // Copy arrays and start state : the filter retains its own estimate of the state
+        this.state = new IAB.Robotics.SE2();
+        this.state.copy( start_state );
+
+        // Observation model
+        this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
+
+        // Build particles
+        var particles = [];
+        //for ( var i=0; i< num_particles; i++ )
+        //{
+            //particles.push( IAB.Estimators.math.nrand()/100+start_state.x, 
+                            //IAB.Estimators.math.nrand()/100+start_state.y, 
+                            //IAB.Estimators.math.nrand()/100+start_state.theta );
+        //}
+
+        // create the particle variables
+        var particleCount = num_particles,
+            particles = new THREE.Geometry(),
+            pMaterial =
+                new THREE.ParticleBasicMaterial({
+                    color: 0xFFFFFF,
+                size: 2
+                });
+
+        // now create the individual particles
+        for(var p = 0; p < particleCount; p++) {
+
+            var pX = IAB.Estimators.math.nrand()+start_state.x,  
+                pY = .1*IAB.Estimators.math.nrand()+start_state.theta, 
+                pZ = IAB.Estimators.math.nrand()+start_state.y, 
+                particle = new THREE.Vertex(
+                        new THREE.Vector3(pX, pY, pZ)
+                        );
+
+            // add it to the geometry
+            particles.vertices.push(particle);
+        }
+
+        // create the particle system
+        var particleSystem =
+            new THREE.ParticleSystem(
+                    particles,
+                    pMaterial);
+
+        // Add it to the scene
+        scene.add(particleSystem);
+
+        // Landmark record
+        var previous_measurements = new IAB.Observations.MeasurementHistory( args.scene );
+
+        // PREDICTION 
+        this.predict = function( dt )
+        {
+            // Inject process noise
+            var control_action = new IAB.Controllers.ControlInput();
+            
+            for ( var i=0;i<num_particles;i++ )
+            {
+                var particle = particleSystem.geometry.vertices[i] ;
+
+                control_action.copy( this.control_action );
+                control_action.u += IAB.Estimators.math.nrand()/100;
+                control_action.v += IAB.Estimators.math.nrand()/100;
+
+                var se2 = model.predict( new IAB.Robotics.SE2( particle.x, particle.z, particle.y) , control_action, dt );
+
+                particle.set( se2.x, se2.theta, se2.y );
+            
+            }
+
+            particleSystem.geometry.verticesNeedUpdate = true; 
+            
+            // Update estimate
+
+            // Graphics
+            //1.   Observed landmark opacity
+            previous_measurements.update();
+        }
+
+        this.update = function(landmark, z){ 
+            
+            // Add it to the render queue
+            previous_measurements.addMeasurement( this.state, landmark);
+
+            // Do: prediction
+            var z_hat = this.observation_model.update( this.state, landmark );
+
+            var innov = numeric.sub( z, z_hat ); 
+            //innov[1] = IAB.Estimators.Math.anglewrap( innov[1] );
+
+        }
 
     },
 
@@ -29,10 +126,14 @@ IAB.Estimators = {
         // Rendering
         this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
 
+        // Process uncertainty
+        var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
+        
         // Observation model
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
-        var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
+        // Landmark record
+        var previous_measurements = new IAB.Observations.MeasurementHistory( args.scene );
         
         // PREDICTION 
         this.predict = function( dt )
@@ -66,47 +167,45 @@ IAB.Estimators = {
         }
 
         // UPDATE
-        var previous_measurements = new IAB.Observations.MeasurementHistory( args.scene );
-
         this.update = function( landmark, z )
         {
-            // Add it to the render queue
-            previous_measurements.addMeasurement( this.state, landmark);
+            // add it to the render queue
+            previous_measurements.addmeasurement( this.state, landmark);
             
-            // Do: prediction
+            // do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
-            // Compute: Measurement jacobian
-            var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
+            // compute: measurement jacobian
+            var jacobian = iab.observations.measurementjacobian( this.state, landmark );
 
-            // Compute: Innovation
+            // compute: innovation
             var innov = numeric.sub( z, z_hat ); 
-            innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
+            innov[1] = iab.estimators.math.anglewrap( innov[1] );
 
-            // Compute: Covariance Innovation
-            var S = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) ) ;
-            S = numeric.add( S, REst );
+            // compute: covariance innovation
+            var s = numeric.dot( numeric.dot( jacobian, this.p ), numeric.transpose( jacobian ) ) ;
+            s = numeric.add( s, rest );
 
-            // Compute: Kalman Gain
-            var W = numeric.dot( numeric.dot( this.P, numeric.transpose(jacobian) ), numeric.inv( S ) );
+            // compute: kalman gain
+            var w = numeric.dot( numeric.dot( this.p, numeric.transpose(jacobian) ), numeric.inv( s ) );
 
-            // Compute update in Joseph form
-            var I = numeric.identity(3);
-            var P = numeric.dot( numeric.dot( numeric.sub( I, numeric.dot( W, jacobian) ), this.P  ), 
-                    numeric.transpose( numeric.sub( I , numeric.dot( W, jacobian) ) ) ) 
+            // compute update in joseph form
+            var i = numeric.identity(3);
+            var p = numeric.dot( numeric.dot( numeric.sub( i, numeric.dot( w, jacobian) ), this.p  ), 
+                    numeric.transpose( numeric.sub( i , numeric.dot( w, jacobian) ) ) ) 
                 
-            P = numeric.add( P, numeric.dot( numeric.dot( W, REst), numeric.transpose( W )  ) );
-            P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
+            p = numeric.add( p, numeric.dot( numeric.dot( w, rest), numeric.transpose( w )  ) );
+            p = numeric.mul( numeric.add( p, numeric.transpose( p ) ), .5 );
 
-            // Compute new state & uncertainty
-            this.P = P;
-            var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
+            // compute new state & uncertainty
+            this.p = p;
+            var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( w, innov ) );
 
             this.state.x = state[0];
             this.state.y = state[1];
-            this.state.theta = IAB.Estimators.math.angleWrap( state[2] );
+            this.state.theta = iab.estimators.math.anglewrap( state[2] );
 
-            this.updateGraphics();
+            this.updategraphics();
         }
 
         this.updateGraphics = function()

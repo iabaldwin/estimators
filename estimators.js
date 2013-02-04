@@ -23,12 +23,11 @@ IAB.Estimators = {
         // Rendering
         this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
 
-        if (landmarks)
-        {
-            // Observation model
-            this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
-        }
+        // Observation model
+        this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
+        var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
+        
         // PREDICTION 
         this.predict = function( dt )
         {
@@ -60,20 +59,19 @@ IAB.Estimators = {
             previous_measurements.update();
         }
 
-        // 
-        var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
-       
+        // UPDATE
         var previous_measurements = new IAB.Observations.MeasurementHistory( args.scene );
 
         this.update = function( landmark, z )
         {
+            // Add it to the render queue
+            previous_measurements.addMeasurement( this.state, landmark);
+            
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
-
-            previous_measurements.addMeasurement( this.state, landmark);
 
             // Compute: Innovation
             var innov = numeric.sub( z, z_hat ); 
@@ -94,7 +92,7 @@ IAB.Estimators = {
             P = numeric.add( P, numeric.dot( numeric.dot( W, REst), numeric.transpose( W )  ) );
             P = numeric.mul( numeric.add( P, numeric.transpose( P ) ), .5 );
 
-            // Compute new state
+            // Compute new state & uncertainty
             this.P = P;
             var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( W, innov ) );
 

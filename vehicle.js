@@ -4,7 +4,6 @@ IAB.Vehicle =  {
 
     Holonomic: function( scene, landmarks )
     {
-
         // Build vehicle representation
         this.vehicle_geometry = IAB.Primitives.Triangle();
         scene.add( this.vehicle_geometry );
@@ -50,21 +49,9 @@ IAB.Vehicle =  {
             return this;
         }
 
-        //TMP
-        //var geometry = new THREE.CircleGeometry( 4, 50 );
-        //var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-        //var odometry_mesh = new THREE.Mesh( geometry, material );
-        //scene.add( odometry_mesh );
-        //odometry_mesh.position = this.sensors[1].estimate ;
-        //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
-
-        var last_update_time = Date.now();
-        
-        this.measurement_available = true;
-
-        var counter = 0;
-   
         this.observation_model = new IAB.Observations.RangingModel( landmarks );
+        
+        var last_update_time = Date.now();
         
         this.update = function()
         {
@@ -100,11 +87,6 @@ IAB.Vehicle =  {
             }
             
             last_update_time = Date.now();
-        }
-
-        this.toggleMeasurements = function()
-        {
-            this.measurement_available = !this.measurement_available; 
         }
 
         this.tweenUpdate = function(obj,b)

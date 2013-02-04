@@ -26,7 +26,7 @@ postInit = function()
     var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
 
     // Sensors
-    var ranging = new IAB.Sensors.Ranging( scene, landmarks, 4, 2 );
+    var ranging = new IAB.Sensors.Ranging( scene, landmarks, 20, 2 );
 
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks );

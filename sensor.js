@@ -139,7 +139,7 @@ IAB.Sensors=  {
     Ranging: function( scene, landmarks, range, update_frequency )
     {
         // Parameters
-        this.range = range || 100;
+        this.range = range || 200;
         this.update_frequency = update_frequency || 2; // Hz
 
         this.geometry = IAB.Primitives.Circle( this.range, 100 );
@@ -164,6 +164,8 @@ IAB.Sensors=  {
         // Core Loop
         this.update = function( robot_location )
         {
+            var readings = [];
+            
             if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
                 this.last_update_time = Date.now();
@@ -176,28 +178,16 @@ IAB.Sensors=  {
 
                 this.geometry.position.copy( robot_location.toVector() );
 
-                var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
+                var visible_landmarks =  this.tree.nearest( robot_location.toVector(), landmarks.length, Math.pow(this.range,2));
 
-                var readings = [];
-
-                for ( var i = 0; i<visible_landmarks.length; i++ )
+                if ( visible_landmarks.length > 0 )
                 {
-                    landmark = visible_landmarks[i][0];
-                    
-                    landmark.material.color = Green; 
-
-                    tmp.copy(robot_location);
-                    var range = tmp.distanceTo(landmark.position);
-      
-                    // Corrupt with noise
-                    range += Math.random()/10;
-
-                    readings.push( { id:landmark.id, range:range } );
+                    readings.push( visible_landmarks[0] );
                 }
 
             }
 
-            //return readings;
+            return readings;
         }
     },
 

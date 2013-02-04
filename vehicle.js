@@ -91,22 +91,10 @@ IAB.Vehicle =  {
             //Measurement available?
             if (readings[0].length > 0)
             { 
-                //counter++;
-                //if ( counter < 100 || counter > 500 )
-                //{
-                    // Observe landmark
-                    //var random_landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
-              
-                    var landmark = readings[0][0];
+                var landmark = readings[0][0];
 
-                    console.log( landmark );
-                    console.log( landmark.position );
-
-                    //this.observation_model.update( this.state, landmark );
-
-                    // Update
-                    //this.estimator.update( landmark, this.observation_model.update( this.state, landmark) );
-                //} 
+                // Update
+                this.estimator.update( landmark, this.observation_model.update( this.state, landmark) );
             }
             
             last_update_time = Date.now();

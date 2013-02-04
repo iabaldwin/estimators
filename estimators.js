@@ -20,17 +20,7 @@ IAB.Estimators = {
         this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
 
         // Build particles
-        var particles = [];
-        //for ( var i=0; i< num_particles; i++ )
-        //{
-            //particles.push( IAB.Estimators.math.nrand()/100+start_state.x, 
-                            //IAB.Estimators.math.nrand()/100+start_state.y, 
-                            //IAB.Estimators.math.nrand()/100+start_state.theta );
-        //}
-
-        // create the particle variables
-        var particleCount = num_particles,
-            particles = new THREE.Geometry(),
+        var particles = new THREE.Geometry(),
             pMaterial =
                 new THREE.ParticleBasicMaterial({
                     color: 0xFFFFFF,
@@ -38,7 +28,7 @@ IAB.Estimators = {
                 });
 
         // now create the individual particles
-        for(var p = 0; p < particleCount; p++) {
+        for(var p = 0; p < num_particles; p++) {
 
             var pX = IAB.Estimators.math.nrand()+start_state.x,  
                 pY = .1*IAB.Estimators.math.nrand()+start_state.theta, 
@@ -80,12 +70,16 @@ IAB.Estimators = {
                 var se2 = model.predict( new IAB.Robotics.SE2( particle.x, particle.z, particle.y) , control_action, dt );
 
                 particle.set( se2.x, se2.theta, se2.y );
-            
             }
 
             particleSystem.geometry.verticesNeedUpdate = true; 
             
             // Update estimate
+            var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, y: a.y + b.y, z: a.z + b.z} } );  
+
+            this.state.x = state.x/num_particles;
+            this.state.y = state.z/num_particles;
+            this.state.theta = IAB.Estimators.math.angleWrap( state.y/num_particles );
 
             // Graphics
             //1.   Observed landmark opacity
@@ -203,7 +197,7 @@ IAB.Estimators = {
 
             this.state.x = state[0];
             this.state.y = state[1];
-            this.state.theta = iab.estimators.math.anglewrap( state[2] );
+            this.state.theta = IAB.Estimators.Math.angleWrap( state[2] );
 
             this.updategraphics();
         }

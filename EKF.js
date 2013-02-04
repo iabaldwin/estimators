@@ -26,8 +26,8 @@ postInit = function()
     var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
 
     // Sensors
-    //var sensor = new IAB.Sensors.RangeBearing( scene, landmarks, 20, 2 );
-    var sensor = new IAB.Sensors.Oracle( scene, landmarks, 2 );
+    var sensor = new IAB.Sensors.RangeBearing( scene, landmarks, 50, 2 );
+    //var sensor = new IAB.Sensors.Oracle( scene, landmarks, 2 );
 
     // Vehicle
     vehicle = new IAB.Vehicle.Holonomic(scene, landmarks );
@@ -39,7 +39,7 @@ postInit = function()
             .setEstimator( estimator )
             .addSensor( sensor );
    
-    //scene.add( new THREE.AxisHelper() );
+    scene.add( new THREE.AxisHelper(10) );
 }
 
 postRender = function()

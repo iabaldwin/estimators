@@ -23,8 +23,11 @@ IAB.Estimators = {
         // Rendering
         this.uncertainty_ellipse = new IAB.Graphing.Ellipse( this.state, this.P, .5, args);
 
-        // Observation model
-        this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
+        if (landmarks)
+        {
+            // Observation model
+            this.observation_model = new IAB.Observations.RangingModel( landmarks, true );
+        }
 
         // PREDICTION 
         this.predict = function( dt )
@@ -64,6 +67,10 @@ IAB.Estimators = {
 
         this.update = function( landmark, z )
         {
+            if (!landmarks)
+            {
+                return;
+            }
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 

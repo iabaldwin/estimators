@@ -73,10 +73,11 @@ IAB.Vehicle =  {
         this.measurement_available = true;
 
         var counter = 0;
-      
-        this.observation_model = new IAB.Observations.RangingModel( landmarks );
-
-        var landmark = 0;
+   
+        if (landmarks)
+        {
+            this.observation_model = new IAB.Observations.RangingModel( landmarks );
+        }
 
         this.update = function()
         {
@@ -99,7 +100,7 @@ IAB.Vehicle =  {
             this.estimator.predict( dt );
 
             //Measurement available?
-            if (this.measurement_available)
+            if (this.measurement_available && landmarks )
             { 
                 counter++;
                 if ( counter < 100 || counter > 500 )

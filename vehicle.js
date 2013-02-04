@@ -79,9 +79,9 @@ IAB.Vehicle =  {
             // Get the *actual* new state
             this.state = this.model.predict( this.state, this.control_input, dt );
 
-            // Update sensors
-            //var position = this.state.toVector();
-            //this.sensors.forEach( function(sensor){ sensor.update( position ); } );
+            // Update sensor 
+            var state = this.state;
+            this.sensors.forEach( function(sensor){ sensor.update( state ); } );
 
             // Update the mesh
             this.vehicle_geometry.position.copy( this.state.toVector() );

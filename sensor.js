@@ -95,49 +95,48 @@ IAB.Sensors=  {
         }
     },
 
-    Ranging: function(scene, landmarks, num_landmarks, update_frequency )
+    Ranging1: function(scene, landmarks, num_landmarks, update_frequency )
     {
         this.last_update_time = Date.now();
         
         // Parameters
-        this.num_landmarks = num_landmarks || 10;
         this.update_frequency = update_frequency || 2; // Hz
 
-        var landmark_indices = [];
+        //var landmark_indices = [];
 
-        for ( var i=0; i <this.num_landmarks; i++ )
-        {
-            landmark_indices.push( Math.random() *  landmarks.length );  
-        }
+        //for ( var i=0; i <this.num_landmarks; i++ )
+        //{
+            //landmark_indices.push( Math.random() *  landmarks.length );  
+        //}
 
-        landmark_indices = landmark_indices.map( Math.ceil );
+        //landmark_indices = landmark_indices.map( Math.ceil );
 
-        var dist = new THREE.Vector3();
+        //var dist = new THREE.Vector3();
 
         this.update = function(robot_location)
         {
-            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
-            {
-                var readings = [];
+            //if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
+            //{
+                //var readings = [];
         
-                for( var i=0; i<landmark_indices.length; i++ )
-                {
-                    var landmark = landmarks[ landmark_indices[i] ];
+                //for( var i=0; i<landmark_indices.length; i++ )
+                //{
+                    //var landmark = landmarks[ landmark_indices[i] ];
 
-                    var range =  dist.distanceTo( robot_location, landmark );
+                    //var range =  dist.distanceTo( robot_location, landmark );
                 
-                    readings.push( { id:landmark.id, range:range } );
-                }
+                    //readings.push( { id:landmark.id, range:range } );
+                //}
 
-                this.last_update_time = Date.now();
+                //this.last_update_time = Date.now();
 
-                return readings;
-            }
+                //return readings;
+            //}
         }
     
     },
 
-    Temp: function( scene, landmarks, range, update_frequency )
+    Ranging: function( scene, landmarks, range, update_frequency )
     {
         // Parameters
         this.range = range || 100;
@@ -192,7 +191,7 @@ IAB.Sensors=  {
 
             }
 
-            return readings;
+            //return readings;
         }
     },
 
@@ -219,11 +218,4 @@ IAB.Sensors=  {
         }
     }
 }
-
-//IAB.Sensors.Heading.prototype = new IAB.Patterns.Observer();
-//IAB.Sensors.Heading.prototype.constructor = IAB.Sensors.Sensor;
-
-//IAB.Sensors.Velocity.prototype = new IAB.Patterns.Observer();
-//IAB.Sensors.Velocity.prototype.constructor = IAB.Sensors.Sensor;
-
 

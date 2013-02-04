@@ -13,9 +13,9 @@ postInit = function()
     var model = new IAB.Models.Ackermann(2); //Wheelbase
        
     // Start state
-    var state = new IAB.Robotics.SE2();
+    var state = new IAB.Robotics.SE2( -10, 10, 10);
     
-    // Process uncertainty
+    // Uncertainties
     var SigmaPhi = 4*Math.PI/180;
     var SigmaV = .1;
 
@@ -38,8 +38,6 @@ postInit = function()
             .setEstimator( estimator )
             .addSensor( LIDAR );
    
-    console.log( 'hi' );
-
     scene.add( new THREE.AxisHelper() );
 }
 

@@ -67,7 +67,41 @@ IAB.Observations =
         jacobian[1][2] = -1;
 
         return jacobian;
-    }
+    },
 
+    MeasurementHistory: function()
+    {
+        // Lines
+        var history = {};
+
+        var max_items = 20;
+
+        this.addMeasurement = function( measurement ){
+        
+            if ( history.length < max_items )
+            {
+                //history.push( [measurement, 1.0]  );
+                history[measurement] = measurement;
+            }
+            else
+            {
+        
+            }
+
+        }
+
+        this.update = function() {
+
+            //console.log( history.length );
+
+            
+            //this.landmark_line.geometry.vertices[0].x = this.state.x;
+            //this.landmark_line.geometry.vertices[0].z = this.state.y;
+            //this.landmark_line.geometry.vertices[1].copy( landmark.position );
+            //this.landmark_line.geometry.verticesNeedUpdate = true;
+
+        }
+
+    }
 
 };

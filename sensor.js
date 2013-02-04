@@ -13,7 +13,7 @@ IAB.Components = {
 };
 
 IAB.Sensors=  {
- 
+
     Heading: function( update_frequency )
     {
 
@@ -95,48 +95,41 @@ IAB.Sensors=  {
         }
     },
 
-    Ranging1: function(scene, landmarks, num_landmarks, update_frequency )
+    Oracle: function( scene, landmarks, update_frequency )
     {
-        this.last_update_time = Date.now();
-        
         // Parameters
         this.update_frequency = update_frequency || 2; // Hz
 
-        //var landmark_indices = [];
-
-        //for ( var i=0; i <this.num_landmarks; i++ )
-        //{
-            //landmark_indices.push( Math.random() *  landmarks.length );  
-        //}
-
-        //landmark_indices = landmark_indices.map( Math.ceil );
-
-        //var dist = new THREE.Vector3();
-
-        this.update = function(robot_location)
-        {
-            //if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
-            //{
-                //var readings = [];
+        this.last_update_time = Date.now();
         
-                //for( var i=0; i<landmark_indices.length; i++ )
-                //{
-                    //var landmark = landmarks[ landmark_indices[i] ];
+        // Core Loop
+        this.update = function( robot_location )
+        {
+            var observed_landmarks = [];
+            
+            if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
+            {
+                this.last_update_time = Date.now();
 
-                    //var range =  dist.distanceTo( robot_location, landmark );
+
+                /* Compute the visible landmarks
+                 *     Note here that we are looking for *all* the landmarks, 
+                 *     and selecting them by the 'sensor horizon', or the 
+                 *     squared-distance.
+                 */
+
+                var landmark = landmarks[Math.floor( Math.random()*landmarks.length )];
+            
+                observed_landmarks.push( landmark );
                 
-                    //readings.push( { id:landmark.id, range:range } );
-                //}
+            }
 
-                //this.last_update_time = Date.now();
-
-                //return readings;
-            //}
+            return observed_landmarks;
         }
-    
+
     },
 
-    Ranging: function( scene, landmarks, range, update_frequency )
+    RangeBearing: function( scene, landmarks, range, update_frequency )
     {
         // Parameters
         this.range = range || 200;
@@ -168,8 +161,6 @@ IAB.Sensors=  {
             
             if (IAB.Components.canUpdate( this.last_update_time, this.update_frequency ))
             {
-                this.last_update_time = Date.now();
-
                 /* Compute the visible landmarks
                  *     Note here that we are looking for *all* the landmarks, 
                  *     and selecting them by the 'sensor horizon', or the 
@@ -182,8 +173,11 @@ IAB.Sensors=  {
 
                 if ( visible_landmarks.length > 0 )
                 {
+                    // First object is landmark, second is distance
                     readings.push( visible_landmarks[0][0] );
                 }
+
+                this.last_update_time = Date.now();
 
             }
 
@@ -191,27 +185,5 @@ IAB.Sensors=  {
         }
     },
 
-    RangeBearing: function( scene, landmarks, range )
-    {
-        // Parameters
-        this.range = range || 100;
-
-        // Squared distance metric 
-        function distance(a, b) {
-            var dx = a.x-b.x;
-            var dz = a.z-b.z;
-            return dx*dx + dz*dz;
-        }
- 
-        // Build KD tree
-        this.tree = new kdTree( landmarks, distance, ["x", "z" ]);
-
-        // Loop
-        this.update = function( robot_location )
-        {
-            // Sensor horizon
-            var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
-        }
-    }
 }
 

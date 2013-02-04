@@ -53,8 +53,11 @@ IAB.Estimators = {
             // Inflate covariance matrix
             this.P = numeric.add( numeric.dot( numeric.dot( JacFx, this.P), numeric.transpose(JacFx) ), numeric.dot( numeric.dot( JacFu, this.Q), numeric.transpose(JacFu) ) );
            
-            // Draw uncertainty
+            // Graphics
+            // 1.   Uncertainty ellipse
             this.updateGraphics();
+            // 2.   Observed landmark opacity
+            previous_measurements.update();
         }
 
         this.landmark_line = IAB.Primitives.Line();
@@ -65,22 +68,17 @@ IAB.Estimators = {
        
         var counter = 0;
 
+        var previous_measurements = new IAB.Observations.MeasurementHistory();
+
         this.update = function( landmark, z )
         {
-            if (!landmarks)
-            {
-                return;
-            }
             // Do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
             // Compute: Measurement jacobian
             var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
-            this.landmark_line.geometry.vertices[0].x = this.state.x;
-            this.landmark_line.geometry.vertices[0].z = this.state.y;
-            this.landmark_line.geometry.vertices[1].copy( landmark.position );
-            this.landmark_line.geometry.verticesNeedUpdate = true;
+            previous_measurements.addMeasurement( this.state, landmark);
 
             // Compute: Innovation
             var innov = numeric.sub( z, z_hat ); 

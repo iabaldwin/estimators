@@ -88,6 +88,8 @@ IAB.Vehicle =  {
             var state = this.state;
             var readings = this.sensors.map( function(sensor){ return sensor.update( state ); } );
 
+            //console.log( readings[0].length );
+
             //Measurement available?
             if (readings[0].length > 0)
             { 

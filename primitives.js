@@ -28,6 +28,28 @@ IAB.Primitives = {
 
         return new THREE.Line( geometry, material );
 
-    }
+    },
 
+    Circle: function( radius, granularity )
+    {
+
+        var material = new THREE.LineBasicMaterial({
+            color: 0x808080,
+        });
+
+        var geometry = new THREE.Geometry();
+
+        var angles = numeric.linspace( 0, 2*Math.PI, granularity );
+
+        var x,z;
+        
+        for (var i=0; i<angles.length; i++ )
+        {
+            x = radius*Math.cos( angles[i] );
+            z = radius*Math.sin( angles[i] );
+            geometry.vertices.push( new THREE.Vector3( x, 0, z ) );
+        }
+
+        return new THREE.Line(geometry, material);
+    }
 };

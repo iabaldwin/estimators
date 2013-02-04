@@ -142,6 +142,10 @@ IAB.Sensors=  {
         this.range = range || 100;
         this.update_frequency = update_frequency || 2; // Hz
 
+        this.geometry = IAB.Primitives.Circle( this.range, 100 );
+
+        scene.add( this.geometry );
+
         // Squared distance metric 
         function distance(a, b) {
             var dx = a.x-b.x;
@@ -169,6 +173,8 @@ IAB.Sensors=  {
                  *     and selecting them by the 'sensor horizon', or the 
                  *     squared-distance.
                  */
+
+                this.geometry.position.copy( robot_location.toVector() );
 
                 var visible_landmarks =  this.tree.nearest( robot_location, landmarks.length, Math.pow(this.range,2));
 

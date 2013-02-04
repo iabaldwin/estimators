@@ -6,18 +6,13 @@ IAB.Vehicle =  {
     {
 
         // Build vehicle representation
-        var vehicle_geometry = new THREE.CircleGeometry( 2, 10 );
-        var vehicle_material = new THREE.MeshLambertMaterial( { color: 0x00ff80, ambient: 0x00ff80, shading: THREE.FlatShading, map: THREE.ImageUtils.loadTexture( "../media/texture.jpg" ) } );
-        this.mesh            = new THREE.Mesh( vehicle_geometry, vehicle_material );
-    
-        scene.add( this.mesh );
+        this.vehicle_geometry = IAB.Primitives.Triangle();
+        scene.add( this.vehicle_geometry );
 
-        this.mesh.position = new THREE.Vector3(0,0,0);
-        this.mesh.rotation.x += THREE.Math.degToRad( 270 );
-
+        // Load representation
         //var loader = new THREE.OBJLoader();
 
-        // Sensors
+        // Sensor suite
         this.sensors = [];
         this.addSensor = function( sensor )
         {
@@ -63,11 +58,6 @@ IAB.Vehicle =  {
         //odometry_mesh.position = this.sensors[1].estimate ;
         //odometry_mesh.rotation.x += THREE.Math.degToRad( 270 );
 
-        this.getPosition = function()
-        {
-            return this.mesh.position;
-        }
-
         var last_update_time = Date.now();
         
         this.measurement_available = true;
@@ -89,12 +79,14 @@ IAB.Vehicle =  {
             // Get the *actual* new state
             this.state = this.model.predict( this.state, this.control_input, dt );
 
-            // Get the position
+            // Update sensors
             //var position = this.state.toVector();
             //this.sensors.forEach( function(sensor){ sensor.update( position ); } );
 
             // Update the mesh
-            this.mesh.position.copy( this.state.toVector() );
+            this.vehicle_geometry.position.copy( this.state.toVector() );
+            // Different co-ord system 
+            this.vehicle_geometry.rotation.y = -1*this.state.theta;
 
             // Predict
             this.estimator.predict( dt );
@@ -139,7 +131,7 @@ IAB.Vehicle =  {
             var start;
             if ( this.waypoints.length == 0 )
             {  
-                start = this.mesh.position;
+                //start = this.vehicle_geometry.position;
             }
             else
             {

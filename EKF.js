@@ -37,7 +37,10 @@ postInit = function()
             .initialState( state )
             .setEstimator( estimator )
             .addSensor( LIDAR );
-            
+   
+    console.log( 'hi' );
+
+    scene.add( new THREE.AxisHelper() );
 }
 
 postRender = function()

@@ -60,15 +60,10 @@ IAB.Estimators = {
             previous_measurements.update();
         }
 
-        this.landmark_line = IAB.Primitives.Line();
-        args.scene.add( this.landmark_line );
-
-        // UPDATE 
+        // 
         var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
        
-        var counter = 0;
-
-        var previous_measurements = new IAB.Observations.MeasurementHistory();
+        var previous_measurements = new IAB.Observations.MeasurementHistory( args.scene );
 
         this.update = function( landmark, z )
         {

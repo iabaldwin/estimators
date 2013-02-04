@@ -69,39 +69,41 @@ IAB.Observations =
         return jacobian;
     },
 
-    MeasurementHistory: function()
+    MeasurementHistory: function( scene )
     {
         // Lines
-        var history = {};
+        var history = [] 
 
-        var max_items = 20;
+        var max_items = 12;
 
-        this.addMeasurement = function( measurement ){
-        
-            if ( history.length < max_items )
+        this.addMeasurement = function( state,  landmark ) {
+
+            if ( history.length >= max_items )
             {
-                //history.push( [measurement, 1.0]  );
-                history[measurement] = measurement;
+                var el = history.shift();
+                scene.remove( el[0] );
             }
-            else
-            {
-        
-            }
+
+            // Add in a new measurement
+            var landmark_line = IAB.Primitives.Line();
+            scene.add( landmark_line );
+
+            landmark_line.geometry.vertices[0].x = state.x;
+            landmark_line.geometry.vertices[0].z = state.y;
+            landmark_line.geometry.vertices[1].copy( landmark.position );
+            landmark_line.geometry.verticesNeedUpdate = true;
+
+            history.push( [landmark_line, 1.0] );
 
         }
 
-        this.update = function() {
-
-            //console.log( history.length );
-
-            
-            //this.landmark_line.geometry.vertices[0].x = this.state.x;
-            //this.landmark_line.geometry.vertices[0].z = this.state.y;
-            //this.landmark_line.geometry.vertices[1].copy( landmark.position );
-            //this.landmark_line.geometry.verticesNeedUpdate = true;
-
+        this.update = function() 
+        {
+            var len = history.length;
+            for ( var i=0; i<len; i++ )
+            {
+                history[i][0].material.opacity -= .01;
+            }
         }
-
     }
-
 };

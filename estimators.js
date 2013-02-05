@@ -86,17 +86,39 @@ IAB.Estimators = {
             previous_measurements.update();
         }
 
+        var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
         this.update = function(landmark, z){ 
             
             // Add it to the render queue
             previous_measurements.addMeasurement( this.state, landmark);
 
-            // Do: prediction
-            var z_hat = this.observation_model.update( this.state, landmark );
+            var particle, z_hat;
+           
+            var L = [];
+            for ( var i=0;i<num_particles;i++ )
+            {
+                particle = particleSystem.geometry.vertices[i] ;
 
-            var innov = numeric.sub( z, z_hat ); 
-            //innov[1] = IAB.Estimators.Math.anglewrap( innov[1] );
+                // Do: prediction
+                z_hat = this.observation_model.update( new IAB.Robotics.SE2( particle.x, particle.z, particle.y), landmark );
 
+                var innov = numeric.sub( z, z_hat ); 
+                innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
+               
+                // Compute likelihood as a weighting function
+                L.push( Math.exp( -1*numeric.dot( numeric.dot(  innov , REst), innov ) ) );
+            }
+           
+            // Compute CDF
+            var sum = L.reduce( function(a,b){return a+b;} );
+            var CDF = IAB.Estimators.math.cumSum( L ).map( function(e){ return e/sum;} );
+
+            // Sample new particles
+            var selection = CDF.map( function(x){ return Math.floor( Math.random()*CDF.length ); } );
+
+            // CDF lookup
+
+            // Reselect
         }
 
     },
@@ -164,21 +186,21 @@ IAB.Estimators = {
         this.update = function( landmark, z )
         {
             // add it to the render queue
-            previous_measurements.addmeasurement( this.state, landmark);
+            previous_measurements.addMeasurement( this.state, landmark);
             
             // do: prediction
             var z_hat = this.observation_model.update( this.state, landmark );
 
             // compute: measurement jacobian
-            var jacobian = iab.observations.measurementjacobian( this.state, landmark );
+            var jacobian = IAB.Observations.MeasurementJacobian( this.state, landmark );
 
             // compute: innovation
             var innov = numeric.sub( z, z_hat ); 
-            innov[1] = iab.estimators.math.anglewrap( innov[1] );
+            innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
 
             // compute: covariance innovation
             var s = numeric.dot( numeric.dot( jacobian, this.p ), numeric.transpose( jacobian ) ) ;
-            s = numeric.add( s, rest );
+            s = numeric.add( s, REst );
 
             // compute: kalman gain
             var w = numeric.dot( numeric.dot( this.p, numeric.transpose(jacobian) ), numeric.inv( s ) );
@@ -188,7 +210,7 @@ IAB.Estimators = {
             var p = numeric.dot( numeric.dot( numeric.sub( i, numeric.dot( w, jacobian) ), this.p  ), 
                     numeric.transpose( numeric.sub( i , numeric.dot( w, jacobian) ) ) ) 
                 
-            p = numeric.add( p, numeric.dot( numeric.dot( w, rest), numeric.transpose( w )  ) );
+            p = numeric.add( p, numeric.dot( numeric.dot( w, REst ), numeric.transpose( w )  ) );
             p = numeric.mul( numeric.add( p, numeric.transpose( p ) ), .5 );
 
             // compute new state & uncertainty

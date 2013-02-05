@@ -60,6 +60,18 @@ IAB.Tools = {
             return angle % ( 2*Math.PI );
         }
 
+        this.cumSum = function( vec )
+        {
+            cumsum = [];
+
+            var len = vec.length;
+            for(var a=0; a<len; a++) {
+                if(a==0) cumsum[a] = vec[0];
+                else cumsum[a] = cumsum[a-1] + vec[a];
+            }
+
+            return cumsum;
+        }
 
         //Box-Mueller transform
         this.nrand = function() {

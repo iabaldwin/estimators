@@ -8,6 +8,12 @@ IAB.Estimators = {
     {
         this.update_frequency = args.update_frequency || 10; // Hz
 
+        this.vehicle_geometry = IAB.Primitives.Triangle();
+        this.vehicle_geometry.material.color.set( 0x808080 );
+       
+        console.log( this.vehicle_geometry.material );
+        scene.add( this.vehicle_geometry );
+
         // Associate control action, and state 
         this.control_action = control_action;
         this.model = model;
@@ -23,7 +29,7 @@ IAB.Estimators = {
         var particles = new THREE.Geometry(),
             pMaterial =
                 new THREE.ParticleBasicMaterial({
-                    color: 0xFFFFFF,
+                    color: 0xff8000,
                 size: 2
                 });
 
@@ -64,8 +70,8 @@ IAB.Estimators = {
                 var particle = particleSystem.geometry.vertices[i] ;
 
                 control_action.copy( this.control_action );
-                control_action.u += IAB.Estimators.math.nrand()/100;
-                control_action.v += IAB.Estimators.math.nrand()/100;
+                control_action.u += IAB.Estimators.math.nrand()/10;
+                control_action.v += IAB.Estimators.math.nrand()/10;
 
                 var se2 = model.predict( new IAB.Robotics.SE2( particle.x, particle.z, particle.y) , control_action, dt );
 
@@ -73,18 +79,28 @@ IAB.Estimators = {
             }
 
             particleSystem.geometry.verticesNeedUpdate = true; 
+
+            // Update state estimate
+            this.updateState( particleSystem );
             
+            // Update landmark opacity
+            previous_measurements.update();
+        
+        }
+
+        this.updateState = function( particleSystem )
+        {
+
             // Update estimate
             var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, y: a.y + b.y, z: a.z + b.z} } );  
-
             this.state.x = state.x/num_particles;
             this.state.y = state.z/num_particles;
             this.state.theta = IAB.Estimators.math.angleWrap( state.y/num_particles );
 
-            // Graphics
-            //1.   Observed landmark opacity
-            previous_measurements.update();
-        
+            // Update the mesh
+            this.vehicle_geometry.position.copy( this.state.toVector() );
+            // Different co-ord system 
+            this.vehicle_geometry.rotation.y = -1*this.state.theta;
         }
 
         var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );

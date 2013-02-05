@@ -6,6 +6,7 @@ IAB.Vehicle =  {
     {
         // Build vehicle representation
         this.vehicle_geometry = IAB.Primitives.Triangle();
+        this.vehicle_geometry.material.linewidth = 2; 
         scene.add( this.vehicle_geometry );
 
         // Load representation
@@ -52,7 +53,8 @@ IAB.Vehicle =  {
         this.observation_model = new IAB.Observations.RangingModel( landmarks );
         
         var last_update_time = Date.now();
-        
+
+        var sensor_active = true;
         this.update = function()
         {
             var dt = (Date.now() - last_update_time)/1000;
@@ -72,21 +74,28 @@ IAB.Vehicle =  {
             this.estimator.predict( dt );
 
             // Update 
-            var state = this.state;
-            var readings = this.sensors.map( function(sensor){ return sensor.update( state ); } );
+           
+            if (this.sensor_active)
+            {
+                var state = this.state;
+                var readings = this.sensors.map( function(sensor){ return sensor.update( state ); } );
 
-            //console.log( readings[0].length );
+                //Measurement available?
+                if (readings[0].length > 0)
+                { 
+                    var landmark = readings[0][0];
 
-            //Measurement available?
-            if (readings[0].length > 0)
-            { 
-                var landmark = readings[0][0];
-
-                // Update
-                this.estimator.update( landmark, this.observation_model.update( this.state, landmark) );
+                    // Update
+                    this.estimator.update( landmark, this.observation_model.update( this.state, landmark) );
+                }
             }
             
             last_update_time = Date.now();
+        }
+
+        this.toggleSensor = function()
+        {
+            this.sensor_active = !this.sensor_active;
         }
 
         this.tweenUpdate = function(obj,b)

@@ -2,10 +2,12 @@ var IAB = window.IAB || {};
 
 IAB.Primitives = {
 
-    Line: function()
+    Line: function( line_color )
     {
+        var color = line_color || 0xffffff;
+
         var material = new THREE.LineBasicMaterial({
-            color: 0x0000ff,
+            color: color,
         });
 
         var geometry = new THREE.Geometry();

@@ -4,7 +4,7 @@ IAB.Primitives = {
 
     Line: function( line_color )
     {
-        var color = line_color || 0xffffff;
+        var color = line_color || 0xff0000;
 
         var material = new THREE.LineBasicMaterial({
             color: color,

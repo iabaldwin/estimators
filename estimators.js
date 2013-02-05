@@ -199,8 +199,8 @@ IAB.Estimators = {
             // Inject process noise
             var control_action = new IAB.Controllers.ControlInput();
             control_action.copy( this.control_action );
-            control_action.u += IAB.Estimators.math.nrand()/100;
-            control_action.v += IAB.Estimators.math.nrand()/100;
+            control_action.u += IAB.Estimators.math.nrand()/10;
+            control_action.v += IAB.Estimators.math.nrand()/10;
 
             // Update estimate
             this.state = model.predict( this.state, control_action, dt );

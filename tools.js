@@ -88,6 +88,25 @@ IAB.Tools = {
             return x1 * c;
         }
 
+        this.nearest = function( num, arr )
+        {
+            var i = 0, closest, closestDiff, currentDiff;
 
+            closest = arr[0];
+            var len = arr.length; 
+            for(i;i<len;i++)
+            { 
+                closestDiff = Math.abs(num - closest);
+                currentDiff = Math.abs(num - arr[i]);
+                if(currentDiff < closestDiff)
+                {
+                    closest = arr[i];
+                }
+                closestDiff = null;
+                currentDiff = null;
+            }
+
+            return closest;
+        }
     }
 };

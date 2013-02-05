@@ -84,6 +84,7 @@ IAB.Estimators = {
             // Graphics
             //1.   Observed landmark opacity
             previous_measurements.update();
+        
         }
 
         var REst = numeric.diag( [ Math.pow( 2, 2), Math.pow( Math.PI*3/180,2)] );
@@ -117,10 +118,25 @@ IAB.Estimators = {
             var selection = CDF.map( function(x){ return Math.random(); } );
 
             // CDF lookup
-             
+            var IDXs = [];
+            for ( var s=0; s<selection.length; s++ )
+            {
+                // Find the closest CDF element
+                var closest = IAB.Estimators.math.nearest( selection[s], CDF ); 
 
+                IDXs.push ( CDF.indexOf(closest ) );
+            }
 
             // Reselect
+            var original_vertices = particleSystem.geometry.vertices.slice(0);
+
+            var len = IDXs.length;
+            for ( var i=0;i<len;i++ )
+            {
+                //particle = particleSystem.geometry.vertices[i] ;
+                particleSystem.geometry.vertices[i].copy(  original_vertices[IDXs[i]] );
+            }
+           
         }
 
     },

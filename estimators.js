@@ -114,9 +114,11 @@ IAB.Estimators = {
             var CDF = IAB.Estimators.math.cumSum( L ).map( function(e){ return e/sum;} );
 
             // Sample new particles
-            var selection = CDF.map( function(x){ return Math.floor( Math.random()*CDF.length ); } );
+            var selection = CDF.map( function(x){ return Math.random(); } );
 
             // CDF lookup
+             
+
 
             // Reselect
         }
@@ -199,29 +201,29 @@ IAB.Estimators = {
             innov[1] = IAB.Estimators.math.angleWrap( innov[1] );
 
             // compute: covariance innovation
-            var s = numeric.dot( numeric.dot( jacobian, this.p ), numeric.transpose( jacobian ) ) ;
+            var s = numeric.dot( numeric.dot( jacobian, this.P ), numeric.transpose( jacobian ) ) ;
             s = numeric.add( s, REst );
 
             // compute: kalman gain
-            var w = numeric.dot( numeric.dot( this.p, numeric.transpose(jacobian) ), numeric.inv( s ) );
+            var w = numeric.dot( numeric.dot( this.P, numeric.transpose(jacobian) ), numeric.inv( s ) );
 
             // compute update in joseph form
             var i = numeric.identity(3);
-            var p = numeric.dot( numeric.dot( numeric.sub( i, numeric.dot( w, jacobian) ), this.p  ), 
+            var p = numeric.dot( numeric.dot( numeric.sub( i, numeric.dot( w, jacobian) ), this.P  ), 
                     numeric.transpose( numeric.sub( i , numeric.dot( w, jacobian) ) ) ) 
                 
             p = numeric.add( p, numeric.dot( numeric.dot( w, REst ), numeric.transpose( w )  ) );
             p = numeric.mul( numeric.add( p, numeric.transpose( p ) ), .5 );
 
             // compute new state & uncertainty
-            this.p = p;
+            this.P = p;
             var state = numeric.add( [this.state.x, this.state.y, this.state.theta], numeric.dot( w, innov ) );
 
             this.state.x = state[0];
             this.state.y = state[1];
-            this.state.theta = IAB.Estimators.Math.angleWrap( state[2] );
+            this.state.theta = IAB.Estimators.math.angleWrap( state[2] );
 
-            this.updategraphics();
+            this.updateGraphics();
         }
 
         this.updateGraphics = function()

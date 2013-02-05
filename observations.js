@@ -13,7 +13,7 @@ IAB.Observations =
             this.lines = [];
             
             var material = new THREE.LineBasicMaterial({
-                color: 0x0000ff,
+                color: 0x808080,
             });
 
             for ( var i=0; i<landmarks.length; i++ )

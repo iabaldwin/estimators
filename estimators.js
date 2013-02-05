@@ -90,9 +90,8 @@ IAB.Estimators = {
 
         this.updateState = function( particleSystem )
         {
-
             // Update estimate
-            var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, y: a.y + b.y, z: a.z + b.z} } );  
+            var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, y: a.y + b.y, z: IAB.Estimators.math.angleWrap(a.z + b.z)} } );  
             this.state.x = state.x/num_particles;
             this.state.y = state.z/num_particles;
             this.state.theta = IAB.Estimators.math.angleWrap( state.y/num_particles );

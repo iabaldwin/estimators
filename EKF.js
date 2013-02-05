@@ -23,8 +23,8 @@ postInit = function()
     var Q = [[Math.pow(SigmaPhi,2),0],[0, Math.pow(SigmaV,2)]];
 
     // Estimator type
-    //var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
-    var estimator = new IAB.Estimators.PF( state, 100, control_input, model, landmarks, {scene:scene, update_frequency:20 });
+    var estimator = new IAB.Estimators.EKF( state, P, Q, control_input, model, landmarks, {scene:scene, update_frequency:20 });
+    //var estimator = new IAB.Estimators.PF( state, 100, control_input, model, landmarks, {scene:scene, update_frequency:20 });
 
     // Sensors
     var sensor = new IAB.Sensors.RangeBearing( scene, landmarks, 50, 2 );

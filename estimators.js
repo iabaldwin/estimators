@@ -8,10 +8,9 @@ IAB.Estimators = {
     {
         this.update_frequency = args.update_frequency || 10; // Hz
 
+        // Representation
         this.vehicle_geometry = IAB.Primitives.Triangle();
         this.vehicle_geometry.material.color.set( 0x808080 );
-       
-        console.log( this.vehicle_geometry.material );
         scene.add( this.vehicle_geometry );
 
         // Associate control action, and state 
@@ -33,7 +32,6 @@ IAB.Estimators = {
                 size: 2
                 });
 
-        // now create the individual particles
         for(var p = 0; p < num_particles; p++) {
 
             var pX = IAB.Estimators.math.nrand()+start_state.x,  
@@ -43,17 +41,14 @@ IAB.Estimators = {
                         new THREE.Vector3(pX, pY, pZ)
                         );
 
-            // add it to the geometry
             particles.vertices.push(particle);
         }
 
-        // create the particle system
         var particleSystem =
             new THREE.ParticleSystem(
                     particles,
                     pMaterial);
 
-        // Add it to the scene
         scene.add(particleSystem);
 
         // Landmark record
@@ -91,7 +86,9 @@ IAB.Estimators = {
         this.updateState = function( particleSystem )
         {
             // Update estimate
-            var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, y: a.y + b.y, z: IAB.Estimators.math.angleWrap(a.z + b.z)} } );  
+            var state = particleSystem.geometry.vertices.reduce( function(a,b){ return {x: a.x + b.x, 
+                                                                    y: a.y + b.y, 
+                                                                    z: a.z + b.z} } );  
             this.state.x = state.x/num_particles;
             this.state.y = state.z/num_particles;
             this.state.theta = IAB.Estimators.math.angleWrap( state.y/num_particles );

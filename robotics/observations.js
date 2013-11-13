@@ -37,7 +37,7 @@ IAB.Observations =
         this.update = function( state, landmark )
         {
             // Subtract out the map
-            loc = tmp.sub( new THREE.Vector3( state.x, 0, state.y ), landmark );
+            loc = tmp.subVectors( new THREE.Vector3( state.x, 0, state.y ), landmark );
 
             var range = loc.length();
 
@@ -53,7 +53,7 @@ IAB.Observations =
     {
         var tmp = new THREE.Vector3(), loc;
 
-        var loc = tmp.sub( landmark, new THREE.Vector3( state.x, 0, state.y ) );
+        var loc = tmp.subVectors( landmark, new THREE.Vector3( state.x, 0, state.y ) );
 
         var range = loc.length(); 
         var rangeSq = loc.lengthSq();

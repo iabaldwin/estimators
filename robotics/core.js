@@ -57,7 +57,6 @@ function init() {
 
     // Controls
     controls = new THREE.TrackballControls( camera );
-    //controls = new THREE.RollControls( camera );
     //controls.movementSpeed = 1;
     //controls.lookSpeed = .003;
 

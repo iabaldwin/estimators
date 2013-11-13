@@ -1,8 +1,7 @@
 var container, stats;
 var camera, scene, renderer;
 var projector, plane, cube;
-var mouse2D, mouse3D, raycaster,
-    theta = 45 * 0.5;
+var mouse2D, mouse3D, raycaster, theta = 45 * 0.5;
 
 var controls,time=Date.now();
 var vehicle, controller;
@@ -11,10 +10,21 @@ var landmarks;
 var postInit = function(){ throw "Must be overridden"; }; // Override me
 var postRender = function(){ throw "Must be overridden";}; // Override me
 
-var step = false;
+/*
+ *Render control
+ */
+var paused = false;
 
-function run()
-{
+function run( target_element ) {
+
+    if( !target_element )
+    {
+        container = document.createElement( 'div' );
+        document.body.appendChild( container );
+    }
+    else
+        container = target_element;
+
     // Initialisaiton routines
     init();
     
@@ -29,15 +39,16 @@ function run()
  */
 
 function init() {
-
-    container = document.createElement( 'div' );
-    document.body.appendChild( container );
-
+    
     // Core scene
     scene = new THREE.Scene();
 
     // Camera
-    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+    var SCREEN_WIDTH = container.clientWidth; 
+    var SCREEN_HEIGHT = container.clientHeight; 
+
+    console.log( SCREEN_WIDTH + 'x' + SCREEN_HEIGHT );
+
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
     camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR); 
     camera.position = new THREE.Vector3(100,100,100);
@@ -67,8 +78,9 @@ function init() {
     directionalLight.position.set( 1, 0.75, 0.5 ).normalize();
     scene.add( directionalLight );
 
-    renderer = new THREE.WebGLRenderer( { antialias: true, preserveDrawingBuffer: true } );
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer = new THREE.WebGLRenderer( {antialias: true, preserveDrawingBuffer: true} );
+    //renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
     container.appendChild( renderer.domElement );
 
@@ -107,8 +119,6 @@ function onDocumentKeyDown( event ) {
     switch( event.keyCode ) {
 
         case 32:
-            step = true;
-
         default:
             break;
     }
@@ -129,17 +139,15 @@ function animate() {
     // Controls
     controls.update();
     
-    // Hook
-    postRender();
+    if (!paused )
+    {
+        // Hook
+        postRender();
+    }
     
-    // Render
+    // Render the scene
     renderer.render( scene, camera );
 
     stats.update();
-
 }
 
-function doStep()
-{
-    step = true;
-}

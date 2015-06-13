@@ -1,19 +1,24 @@
+/*
+ *Render control
+ */
+var paused = false;
 var container, stats;
 var camera, scene, renderer;
 var projector, plane, cube;
 var mouse2D, mouse3D, raycaster, theta = 45 * 0.5;
 
+/*
+ *Simulator control
+ */
 var controls,time=Date.now();
 var vehicle, controller;
 var landmarks;
 
+/*
+ *Overloaded functions
+ */
 var postInit = function(){ throw "Must be overridden"; }; // Override me
 var postRender = function(){ throw "Must be overridden";}; // Override me
-
-/*
- *Render control
- */
-var paused = false;
 
 function run( target_element ) {
 
@@ -57,14 +62,14 @@ function init() {
 
     // Controls
     controls = new THREE.TrackballControls( camera );
-    //controls.movementSpeed = 1;
-    //controls.lookSpeed = .003;
 
+    // Fog
     scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
 
-    // Projection estimation
+    // Projection 
     projector = new THREE.Projector();
 
+    // Grid
     plane = new THREE.Mesh( new THREE.PlaneGeometry( 200, 200, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0x555555, wireframe: true } ) );
     plane.rotation.x = - Math.PI / 2;
     scene.add( plane );
@@ -78,7 +83,6 @@ function init() {
     scene.add( directionalLight );
 
     renderer = new THREE.WebGLRenderer( {antialias: true, preserveDrawingBuffer: true} );
-    //renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
     container.appendChild( renderer.domElement );
@@ -101,15 +105,11 @@ function onWindowResize() {
 }
 
 function onDocumentMouseMove( event ) {
-
     event.preventDefault();
-
 }
 
 function onDocumentMouseDown( event ) {
-
     event.preventDefault();
-
 }
 
 document.addEventListener( 'keypress', onDocumentKeyDown, false );
@@ -125,7 +125,6 @@ function onDocumentKeyDown( event ) {
 }
 
 function onDocumentKeyUp( event ) {
-
     switch( event.keyCode ) {
     }
 }
